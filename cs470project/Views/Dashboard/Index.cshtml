@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+<p>
+    @Html.ActionLink("New Project", "NewProject", "Dashboard", null, new { @class = "btn btn-primary" })
+</p>
+
+<table id="researchProjects" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Date Added</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/dashboard_index")
+}

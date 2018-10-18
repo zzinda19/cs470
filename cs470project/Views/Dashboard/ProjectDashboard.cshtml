@@ -1,0 +1,72 @@
+﻿@model cs470project.ViewModels.ProjectApiViewModel
+@{
+    ViewBag.Title = "Project Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 id="header"></h2>
+<br />
+<ul class="nav nav-tabs nav-justified">
+    <li class="active"><a data-toggle="tab" href="#home">Details</a></li>
+    <li><a data-toggle="tab" href="#menu1">Upload</a></li>
+    <li><a data-toggle="tab" href="#menu2">Download</a></li>
+    <li><a data-toggle="tab" href="#menu3">IAM</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="form-group">
+        <input id="projectID" name="projectID" type="hidden" value=@Model.ProjectID>
+    </div>
+    <br />
+    <div id="home" class="tab-pane fade in active">
+        <h4>Project Description</h4>
+        <p id="description"></p>
+        <h4>Date Added</h4>
+        <p id="insertDate"></p>
+        <br />
+        <p>
+            @Html.ActionLink("Edit Project", "EditProject", "Dashboard", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
+        </p>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+        <h4>Upload Accession Numbers</h4>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group col-md-8">
+                <div class="input-group">
+                    <label class="input-group-btn">
+                        <span class="btn btn-default">
+                            Browse <input type="file" style="display: none;" accept=".csv, .xls, .xlsx">
+                        </span>
+                    </label>
+                    <label class="input-group-btn">
+                        <button class="btn btn-primary" name="submit" type="submit">Upload</button>
+                    </label>
+                </div>
+            </div>
+        </form>  
+    </div>
+    <div id="menu2" class="tab-pane fade">
+        <h4>Download Key Pairs</h4>
+        @using (Html.BeginForm("Download", "Dashboard"))
+        {
+        <div class="form-group">
+            @*
+            @Html.HiddenFor(p => p.ResearchProject.ProjectID)
+        @Html.RadioButtonFor(p => p.DownloadType, 1, new { @checked = "true" }) Accession Numbers&nbsp;
+        @Html.RadioButtonFor(p => p.DownloadType, 2) MRNs&nbsp;
+        @Html.RadioButtonFor(p => p.DownloadType, 3) Both
+            *@
+        </div>
+            <button type="submit" class="btn btn-primary">Download</button>
+        }
+    </div>
+    <div id="menu3" class="tab-pane fade">
+        <h4>User Permissions</h4>
+        <p>Data table here.</p>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/dashboard_project_dashboard")
+}

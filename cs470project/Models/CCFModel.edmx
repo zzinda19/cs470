@@ -1,0 +1,515 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CCFDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DIM_Patient">
+          <Key>
+            <PropertyRef Name="P_pat_itn" />
+            <PropertyRef Name="P_hosp" />
+          </Key>
+          <Property Name="P_pat_itn" Type="int" Nullable="false" />
+          <Property Name="P_pt_med_rec_no" Type="varchar" MaxLength="64" />
+          <Property Name="P_mrn_assign_auth_cd" Type="varchar" MaxLength="36" />
+          <Property Name="P_hosp" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="PN_pt_last" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="PN_pt_first" Type="varchar" MaxLength="32" />
+          <Property Name="PN_pt_middle" Type="varchar" MaxLength="32" />
+          <Property Name="PN_pt_birth_dtime" Type="datetime" />
+          <Property Name="PC_corp_id" Type="varchar" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="DIM_Study">
+          <Key>
+            <PropertyRef Name="SKey" />
+          </Key>
+          <Property Name="SKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DepartmentCode" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="ProcedureNumber" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="LongDescription" Type="varchar" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="FACT_Procedure">
+          <Key>
+            <PropertyRef Name="A_acc_itn" />
+          </Key>
+          <Property Name="A_acc_itn" Type="int" Nullable="false" />
+          <Property Name="A_pat_itn" Type="int" Nullable="false" />
+          <Property Name="A_hosp" Type="varchar" MaxLength="6" />
+          <Property Name="A_proc_dtime" Type="smalldatetime" />
+          <Property Name="AI_dept" Type="varchar" MaxLength="3" />
+          <Property Name="RT_result" Type="varchar(max)" />
+          <Property Name="RT_impression" Type="varchar(max)" />
+          <Property Name="XAI_StudySKey" Type="int" />
+        </EntityType>
+        <EntityType Name="ResearchProject">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectName" Type="varchar" MaxLength="80" />
+          <Property Name="ProjectDescription" Type="varchar" MaxLength="1000" />
+          <Property Name="AccessionPrefix" Type="varchar" MaxLength="50" />
+          <Property Name="MRNPrefix" Type="varchar" MaxLength="50" />
+          <Property Name="InsertDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResearchProjectAccessions">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="Accession" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="Accession" Type="int" Nullable="false" />
+          <Property Name="AlternateID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AlternateGUID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResearchProjectAccessionTags">
+          <Key>
+            <PropertyRef Name="TagID" />
+            <PropertyRef Name="Accession" />
+          </Key>
+          <Property Name="TagID" Type="bigint" Nullable="false" />
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="Accession" Type="int" Nullable="false" />
+          <Property Name="RecordInsertDate" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResearchProjectPatients">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="MRN" />
+            <PropertyRef Name="MRNType" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="AlternateID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AlternateGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MRN" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="MRNType" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AssigningAuthority" Type="varchar" MaxLength="36" />
+          <Property Name="pat_itn" Type="int" Nullable="false" />
+          <Property Name="hosp" Type="varchar" MaxLength="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResearchProjectTags">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="TagID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="TagText" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="RecordInsertDate" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ResearchProjectAccessions_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectAccessions" Type="Self.ResearchProjectAccessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectAccessions">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectAccessionTags_ResearchProjectAccession">
+          <End Role="ResearchProjectAccessions" Type="Self.ResearchProjectAccessions" Multiplicity="1" />
+          <End Role="ResearchProjectAccessionTags" Type="Self.ResearchProjectAccessionTags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProjectAccessions">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="Accession" />
+            </Principal>
+            <Dependent Role="ResearchProjectAccessionTags">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="Accession" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectAccessionTags_ResearchProjectTags">
+          <End Role="ResearchProjectTags" Type="Self.ResearchProjectTags" Multiplicity="1" />
+          <End Role="ResearchProjectAccessionTags" Type="Self.ResearchProjectAccessionTags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProjectTags">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="ResearchProjectAccessionTags">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectPatients_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectPatients" Type="Self.ResearchProjectPatients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectPatients">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectTags_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectTags" Type="Self.ResearchProjectTags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectTags">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CCFDataModelStoreContainer">
+          <EntitySet Name="DIM_Patient" EntityType="Self.DIM_Patient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DIM_Study" EntityType="Self.DIM_Study" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FACT_Procedure" EntityType="Self.FACT_Procedure" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProject" EntityType="Self.ResearchProject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProjectAccessions" EntityType="Self.ResearchProjectAccessions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProjectAccessionTags" EntityType="Self.ResearchProjectAccessionTags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProjectPatients" EntityType="Self.ResearchProjectPatients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProjectTags" EntityType="Self.ResearchProjectTags" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ResearchProjectAccessions_ProjectID" Association="Self.FK_ResearchProjectAccessions_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProject" />
+            <End Role="ResearchProjectAccessions" EntitySet="ResearchProjectAccessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectAccessionTags_ResearchProjectAccession" Association="Self.FK_ResearchProjectAccessionTags_ResearchProjectAccession">
+            <End Role="ResearchProjectAccessions" EntitySet="ResearchProjectAccessions" />
+            <End Role="ResearchProjectAccessionTags" EntitySet="ResearchProjectAccessionTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectAccessionTags_ResearchProjectTags" Association="Self.FK_ResearchProjectAccessionTags_ResearchProjectTags">
+            <End Role="ResearchProjectTags" EntitySet="ResearchProjectTags" />
+            <End Role="ResearchProjectAccessionTags" EntitySet="ResearchProjectAccessionTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectPatients_ProjectID" Association="Self.FK_ResearchProjectPatients_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProject" />
+            <End Role="ResearchProjectPatients" EntitySet="ResearchProjectPatients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectTags_ProjectID" Association="Self.FK_ResearchProjectTags_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProject" />
+            <End Role="ResearchProjectTags" EntitySet="ResearchProjectTags" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CCFDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DIM_Patient">
+          <Key>
+            <PropertyRef Name="P_pat_itn" />
+            <PropertyRef Name="P_hosp" />
+          </Key>
+          <Property Name="P_pat_itn" Type="Int32" Nullable="false" />
+          <Property Name="P_pt_med_rec_no" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="P_mrn_assign_auth_cd" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="P_hosp" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PN_pt_last" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PN_pt_first" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="PN_pt_middle" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="PN_pt_birth_dtime" Type="DateTime" Precision="3" />
+          <Property Name="PC_corp_id" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DIM_Study">
+          <Key>
+            <PropertyRef Name="SKey" />
+          </Key>
+          <Property Name="SKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DepartmentCode" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProcedureNumber" Type="String" MaxLength="4" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LongDescription" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FACT_Procedure">
+          <Key>
+            <PropertyRef Name="A_acc_itn" />
+          </Key>
+          <Property Name="A_acc_itn" Type="Int32" Nullable="false" />
+          <Property Name="A_pat_itn" Type="Int32" Nullable="false" />
+          <Property Name="A_hosp" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="A_proc_dtime" Type="DateTime" Precision="0" />
+          <Property Name="AI_dept" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="RT_result" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RT_impression" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="XAI_StudySKey" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ResearchProject">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectName" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="ProjectDescription" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="AccessionPrefix" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="MRNPrefix" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InsertDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ResearchProjectAccessions" Relationship="Self.FK_ResearchProjectAccessions_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectAccessions" />
+          <NavigationProperty Name="ResearchProjectPatients" Relationship="Self.FK_ResearchProjectPatients_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectPatients" />
+          <NavigationProperty Name="ResearchProjectTags" Relationship="Self.FK_ResearchProjectTags_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectTags" />
+        </EntityType>
+        <EntityType Name="ResearchProjectAccession">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="Accession" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="Accession" Type="Int32" Nullable="false" />
+          <Property Name="AlternateID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AlternateGUID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="ResearchProject" Relationship="Self.FK_ResearchProjectAccessions_ProjectID" FromRole="ResearchProjectAccessions" ToRole="ResearchProject" />
+          <NavigationProperty Name="ResearchProjectAccessionTags" Relationship="Self.FK_ResearchProjectAccessionTags_ResearchProjectAccession" FromRole="ResearchProjectAccessions" ToRole="ResearchProjectAccessionTags" />
+        </EntityType>
+        <EntityType Name="ResearchProjectAccessionTag">
+          <Key>
+            <PropertyRef Name="TagID" />
+            <PropertyRef Name="Accession" />
+          </Key>
+          <Property Name="TagID" Type="Int64" Nullable="false" />
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="Accession" Type="Int32" Nullable="false" />
+          <Property Name="RecordInsertDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="ResearchProjectAccession" Relationship="Self.FK_ResearchProjectAccessionTags_ResearchProjectAccession" FromRole="ResearchProjectAccessionTags" ToRole="ResearchProjectAccessions" />
+          <NavigationProperty Name="ResearchProjectTag" Relationship="Self.FK_ResearchProjectAccessionTags_ResearchProjectTags" FromRole="ResearchProjectAccessionTags" ToRole="ResearchProjectTags" />
+        </EntityType>
+        <EntityType Name="ResearchProjectPatient">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="MRN" />
+            <PropertyRef Name="MRNType" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="AlternateID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AlternateGUID" Type="Guid" Nullable="false" />
+          <Property Name="MRN" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MRNType" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AssigningAuthority" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="pat_itn" Type="Int32" Nullable="false" />
+          <Property Name="hosp" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ResearchProject" Relationship="Self.FK_ResearchProjectPatients_ProjectID" FromRole="ResearchProjectPatients" ToRole="ResearchProject" />
+        </EntityType>
+        <EntityType Name="ResearchProjectTag">
+          <Key>
+            <PropertyRef Name="TagID" />
+          </Key>
+          <Property Name="TagID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="TagText" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RecordInsertDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="ResearchProject" Relationship="Self.FK_ResearchProjectTags_ProjectID" FromRole="ResearchProjectTags" ToRole="ResearchProject" />
+          <NavigationProperty Name="ResearchProjectAccessionTags" Relationship="Self.FK_ResearchProjectAccessionTags_ResearchProjectTags" FromRole="ResearchProjectTags" ToRole="ResearchProjectAccessionTags" />
+        </EntityType>
+        <Association Name="FK_ResearchProjectAccessions_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectAccessions" Type="Self.ResearchProjectAccession" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectAccessions">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectPatients_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectPatients" Type="Self.ResearchProjectPatient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectPatients">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectTags_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectTags" Type="Self.ResearchProjectTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectTags">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectAccessionTags_ResearchProjectAccession">
+          <End Role="ResearchProjectAccessions" Type="Self.ResearchProjectAccession" Multiplicity="1" />
+          <End Role="ResearchProjectAccessionTags" Type="Self.ResearchProjectAccessionTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProjectAccessions">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="Accession" />
+            </Principal>
+            <Dependent Role="ResearchProjectAccessionTags">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="Accession" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResearchProjectAccessionTags_ResearchProjectTags">
+          <End Role="ResearchProjectTags" Type="Self.ResearchProjectTag" Multiplicity="1" />
+          <End Role="ResearchProjectAccessionTags" Type="Self.ResearchProjectAccessionTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProjectTags">
+              <PropertyRef Name="TagID" />
+            </Principal>
+            <Dependent Role="ResearchProjectAccessionTags">
+              <PropertyRef Name="TagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CCFDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DIM_Patient" EntityType="Self.DIM_Patient" />
+          <EntitySet Name="DIM_Study" EntityType="Self.DIM_Study" />
+          <EntitySet Name="FACT_Procedure" EntityType="Self.FACT_Procedure" />
+          <EntitySet Name="ResearchProjects" EntityType="Self.ResearchProject" />
+          <EntitySet Name="ResearchProjectAccessions" EntityType="Self.ResearchProjectAccession" />
+          <EntitySet Name="ResearchProjectAccessionTags" EntityType="Self.ResearchProjectAccessionTag" />
+          <EntitySet Name="ResearchProjectPatients" EntityType="Self.ResearchProjectPatient" />
+          <EntitySet Name="ResearchProjectTags" EntityType="Self.ResearchProjectTag" />
+          <AssociationSet Name="FK_ResearchProjectAccessions_ProjectID" Association="Self.FK_ResearchProjectAccessions_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProjects" />
+            <End Role="ResearchProjectAccessions" EntitySet="ResearchProjectAccessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectPatients_ProjectID" Association="Self.FK_ResearchProjectPatients_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProjects" />
+            <End Role="ResearchProjectPatients" EntitySet="ResearchProjectPatients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectTags_ProjectID" Association="Self.FK_ResearchProjectTags_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProjects" />
+            <End Role="ResearchProjectTags" EntitySet="ResearchProjectTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectAccessionTags_ResearchProjectAccession" Association="Self.FK_ResearchProjectAccessionTags_ResearchProjectAccession">
+            <End Role="ResearchProjectAccessions" EntitySet="ResearchProjectAccessions" />
+            <End Role="ResearchProjectAccessionTags" EntitySet="ResearchProjectAccessionTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResearchProjectAccessionTags_ResearchProjectTags" Association="Self.FK_ResearchProjectAccessionTags_ResearchProjectTags">
+            <End Role="ResearchProjectTags" EntitySet="ResearchProjectTags" />
+            <End Role="ResearchProjectAccessionTags" EntitySet="ResearchProjectAccessionTags" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CCFDataModelStoreContainer" CdmEntityContainer="CCFDataEntities">
+          <EntitySetMapping Name="DIM_Patient">
+            <EntityTypeMapping TypeName="CCFDataModel.DIM_Patient">
+              <MappingFragment StoreEntitySet="DIM_Patient">
+                <ScalarProperty Name="P_pat_itn" ColumnName="P_pat_itn" />
+                <ScalarProperty Name="P_pt_med_rec_no" ColumnName="P_pt_med_rec_no" />
+                <ScalarProperty Name="P_mrn_assign_auth_cd" ColumnName="P_mrn_assign_auth_cd" />
+                <ScalarProperty Name="P_hosp" ColumnName="P_hosp" />
+                <ScalarProperty Name="PN_pt_last" ColumnName="PN_pt_last" />
+                <ScalarProperty Name="PN_pt_first" ColumnName="PN_pt_first" />
+                <ScalarProperty Name="PN_pt_middle" ColumnName="PN_pt_middle" />
+                <ScalarProperty Name="PN_pt_birth_dtime" ColumnName="PN_pt_birth_dtime" />
+                <ScalarProperty Name="PC_corp_id" ColumnName="PC_corp_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DIM_Study">
+            <EntityTypeMapping TypeName="CCFDataModel.DIM_Study">
+              <MappingFragment StoreEntitySet="DIM_Study">
+                <ScalarProperty Name="SKey" ColumnName="SKey" />
+                <ScalarProperty Name="DepartmentCode" ColumnName="DepartmentCode" />
+                <ScalarProperty Name="ProcedureNumber" ColumnName="ProcedureNumber" />
+                <ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FACT_Procedure">
+            <EntityTypeMapping TypeName="CCFDataModel.FACT_Procedure">
+              <MappingFragment StoreEntitySet="FACT_Procedure">
+                <ScalarProperty Name="A_acc_itn" ColumnName="A_acc_itn" />
+                <ScalarProperty Name="A_pat_itn" ColumnName="A_pat_itn" />
+                <ScalarProperty Name="A_hosp" ColumnName="A_hosp" />
+                <ScalarProperty Name="A_proc_dtime" ColumnName="A_proc_dtime" />
+                <ScalarProperty Name="AI_dept" ColumnName="AI_dept" />
+                <ScalarProperty Name="RT_result" ColumnName="RT_result" />
+                <ScalarProperty Name="RT_impression" ColumnName="RT_impression" />
+                <ScalarProperty Name="XAI_StudySKey" ColumnName="XAI_StudySKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProjects">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchProject">
+              <MappingFragment StoreEntitySet="ResearchProject">
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="ProjectDescription" ColumnName="ProjectDescription" />
+                <ScalarProperty Name="AccessionPrefix" ColumnName="AccessionPrefix" />
+                <ScalarProperty Name="MRNPrefix" ColumnName="MRNPrefix" />
+                <ScalarProperty Name="InsertDate" ColumnName="InsertDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProjectAccessions">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchProjectAccession">
+              <MappingFragment StoreEntitySet="ResearchProjectAccessions">
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="Accession" ColumnName="Accession" />
+                <ScalarProperty Name="AlternateID" ColumnName="AlternateID" />
+                <ScalarProperty Name="AlternateGUID" ColumnName="AlternateGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProjectAccessionTags">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchProjectAccessionTag">
+              <MappingFragment StoreEntitySet="ResearchProjectAccessionTags">
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="Accession" ColumnName="Accession" />
+                <ScalarProperty Name="RecordInsertDate" ColumnName="RecordInsertDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProjectPatients">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchProjectPatient">
+              <MappingFragment StoreEntitySet="ResearchProjectPatients">
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="AlternateID" ColumnName="AlternateID" />
+                <ScalarProperty Name="AlternateGUID" ColumnName="AlternateGUID" />
+                <ScalarProperty Name="MRN" ColumnName="MRN" />
+                <ScalarProperty Name="MRNType" ColumnName="MRNType" />
+                <ScalarProperty Name="AssigningAuthority" ColumnName="AssigningAuthority" />
+                <ScalarProperty Name="pat_itn" ColumnName="pat_itn" />
+                <ScalarProperty Name="hosp" ColumnName="hosp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProjectTags">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchProjectTag">
+              <MappingFragment StoreEntitySet="ResearchProjectTags">
+                <ScalarProperty Name="TagID" ColumnName="TagID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="TagText" ColumnName="TagText" />
+                <ScalarProperty Name="RecordInsertDate" ColumnName="RecordInsertDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
