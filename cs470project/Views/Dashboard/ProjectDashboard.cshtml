@@ -30,18 +30,18 @@
     </div>
     <div id="menu1" class="tab-pane fade">
         <h4>Upload Accession Numbers</h4>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <div class="form-group col-md-8">
+        <form id="uploadForm" class="form-inline" enctype="multipart/form-data">
+            <div class="form-group">
                 <div class="input-group">
+                    <input id="fileName" type="text" class="form-control" readonly>
                     <label class="input-group-btn">
                         <span class="btn btn-default">
-                            Browse <input type="file" style="display: none;" accept=".csv, .xls, .xlsx">
+                            Browse<input id="fileInput" type="file" accept=".csv, .xls, .xlsx" style="display: none;">
                         </span>
                     </label>
-                    <label class="input-group-btn">
-                        <button class="btn btn-primary" name="submit" type="submit">Upload</button>
-                    </label>
                 </div>
+                &nbsp;
+                <button class="btn btn-primary" type="submit">Upload</button>
             </div>
         </form>  
     </div>
