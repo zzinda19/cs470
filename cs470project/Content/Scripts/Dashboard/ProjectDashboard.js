@@ -21,8 +21,10 @@
 };
 
 var uploadForm = {
+
     Initialize: function () {
         uploadForm.SetBrowseFileHandler();
+        uploadForm.SetUploadFileHandler();
     },
 
     SetBrowseFileHandler: function () {
@@ -37,12 +39,24 @@ var uploadForm = {
     },
 
     SetUploadFileHandler: function () {
-        // Create Submit Handler
-        // Create Api Controller + Method, i.e. /Api/FileController/Upload
-        // Use AJAX call and submit file using Data: file.
-        // API Method can call the existing controller we've made and pass through file data.
-        // API Method should return data in the form of IEnumerable or List.
-        // Create datatable using returned data if the user presses the Preview Button.
+        $("#uploadForm").on("submit", function () {
+            toastr.success("submitted");
+            console.log("Submitted");
+            var fileInput = $("#fileInput");
+            var file = fileInput[0].files[0];
+
+            $.ajax({
+                url: '/Api/File/Upload',
+                method: 'post',
+                data: file,
+                success: function () {
+                    toastr.success("It works");
+                },
+                error: function(xhr) {
+                    toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
+                }
+            });
+        });
     }
 };
 
