@@ -29,13 +29,13 @@
     </div>
     <div id="menu1" class="tab-pane fade">
         <h4>Upload Accession Numbers</h4>
-        <form id="uploadForm" class="form-inline" enctype="multipart/form-data">
+        <form id="uploadForm" class="form-inline" enctype="multipart/form-data" method="POST" action="/Api/File/Upload">
             <div class="form-group">
                 <div class="input-group">
                     <input id="fileName" type="text" class="form-control" readonly>
                     <label class="input-group-btn">
                         <span class="btn btn-default">
-                            Browse<input id="fileInput" type="file" accept=".csv, .xls, .xlsx" style="display: none;">
+                            Browse<input type="file" id="fileInput" name="fileInput" accept=".csv, .xls, .xlsx" style="display: none;">
                         </span>
                     </label>
                 </div>

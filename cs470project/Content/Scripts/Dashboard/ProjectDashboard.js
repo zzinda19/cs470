@@ -24,7 +24,7 @@ var uploadForm = {
 
     Initialize: function () {
         uploadForm.SetBrowseFileHandler();
-        uploadForm.SetUploadFileHandler();
+        //uploadForm.SetUploadFileHandler();
     },
 
     SetBrowseFileHandler: function () {
@@ -34,14 +34,13 @@ var uploadForm = {
             console.log(fileInput);
             var file = fileInput[0].files[0];
             var fileName = file.name;
+            console.log(fileName);
             $("#fileName").val(fileName);
         });
     },
 
     SetUploadFileHandler: function () {
         $("#uploadForm").on("submit", function () {
-            toastr.success("submitted");
-            console.log("Submitted");
             var fileInput = $("#fileInput");
             var file = fileInput[0].files[0];
 
@@ -49,13 +48,15 @@ var uploadForm = {
                 url: '/Api/File/Upload',
                 method: 'post',
                 data: file,
-                success: function () {
-                    toastr.success("It works");
+                success: function (data) {
+                    toastr.success("File successfully uploaded." + data);
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
                 }
             });
+
+            return false;
         });
     }
 };
