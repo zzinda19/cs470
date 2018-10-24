@@ -12,6 +12,7 @@ namespace cs470project.App_Start
     {
         public MappingProfile()
         {
+            //Resarch Project Mapping
             // Domain to Dto
             CreateMap<ResearchProject, ResearchProjectDto>()
                 .ForMember(p => p.InsertDate, opt => opt.MapFrom(src => ((DateTime) src.InsertDate).ToShortDateString()));
@@ -20,6 +21,16 @@ namespace cs470project.App_Start
             CreateMap<ResearchProjectDto, ResearchProject>()
                 .ForMember(p => p.ProjectID, opt => opt.Ignore())
                 .ForMember(p => p.InsertDate, opt => opt.Ignore());
+
+            //Research Accession Mapping
+            // Domain to Dto
+            CreateMap<ResearchProjectAccession, ResearchAccessionDto>();
+            // .ForMember;
+
+            // Dto to Domain
+            CreateMap<ResearchAccessionDto, ResearchProjectAccession>();
+                //.ForMember()
+                //.ForMember();
         }
     }
 }

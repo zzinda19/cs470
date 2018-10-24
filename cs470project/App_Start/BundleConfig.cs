@@ -36,7 +36,8 @@ namespace cs470project
                       "~/Content/Scripts/Dashboard/Index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/dashboard_project_dashboard").Include(
-                      "~/Content/Scripts/Dashboard/ProjectDashboard.js"));
+                      "~/Content/Scripts/Dashboard/ProjectDashboard.js",
+                      "~/Content/Scripts/Dashboard/UploadAccession.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/NewProject").Include(
                       "~/Content/Scripts/Dashboard/NewProject.js"));

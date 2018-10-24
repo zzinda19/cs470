@@ -209,10 +209,12 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Api\ResearchAccessionsController.cs" />
     <Compile Include="Controllers\Api\ResearchProjectsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Dtos\ResearchAccessionDto.cs" />
     <Compile Include="Dtos\ResearchProjectDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -262,6 +264,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AccessionAPIViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\ProjectApiViewModel.cs" />
     <Compile Include="ViewModels\ProjectFormViewModel.cs" />
@@ -434,6 +437,7 @@
     <Content Include="Content\Scripts\Dashboard\ProjectDashboard.js" />
     <Content Include="Content\Scripts\Dashboard\Index.js" />
     <Content Include="Content\bootstrap-cyborg.css" />
+    <Content Include="Content\Scripts\Dashboard\UploadAccession.js" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />

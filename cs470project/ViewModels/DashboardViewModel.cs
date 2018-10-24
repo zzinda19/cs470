@@ -9,6 +9,7 @@ namespace cs470project.ViewModels
     public class DashboardViewModel
     {
         public ResearchProject ResearchProject { get; set; }
+        public ResearchProjectAccession ResearchAccession { get; set; }
         public int DownloadType { get; set; }
     }
 }
