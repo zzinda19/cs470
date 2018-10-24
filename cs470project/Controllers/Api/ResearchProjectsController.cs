@@ -15,7 +15,6 @@ namespace cs470project.Controllers.Api
         // GET /Api/ResearchProjects
         /*
          *  Author: Zak Zinda
-         *  Description: 
          *  
          */
         public IHttpActionResult GetResearchProjects()

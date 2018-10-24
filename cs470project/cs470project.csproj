@@ -210,6 +210,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\ResearchAccessionsController.cs" />
+    <Compile Include="Controllers\Api\FileController.cs" />
     <Compile Include="Controllers\Api\ResearchProjectsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -434,10 +435,10 @@
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\Scripts\Dashboard\EditProject.js" />
     <Content Include="Content\Scripts\Dashboard\NewProject.js" />
-    <Content Include="Content\Scripts\Dashboard\ProjectDashboard.js" />
     <Content Include="Content\Scripts\Dashboard\Index.js" />
     <Content Include="Content\bootstrap-cyborg.css" />
     <Content Include="Content\Scripts\Dashboard\UploadAccession.js" />
+    <Content Include="Content\Scripts\Dashboard\ProjectDashboard.js" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />

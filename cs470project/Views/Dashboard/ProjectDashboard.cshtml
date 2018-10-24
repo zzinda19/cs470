@@ -23,23 +23,20 @@
         <p id="description"></p>
         <h4>Date Added</h4>
         <p id="insertDate"></p>
-        <br />
         <p>
             @Html.ActionLink("Edit Project", "EditProject", "Dashboard", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
         </p>
     </div>
     <div id="menu1" class="tab-pane fade">
         <h4>Upload Accession Numbers</h4>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <div class="form-group col-md-8">
+        <form id="uploadForm" class="form-inline" enctype="multipart/form-data" method="POST" action="/Api/File/Upload">
+            <div class="form-group">
                 <div class="input-group">
+                    <input id="fileName" type="text" class="form-control" readonly>
                     <label class="input-group-btn">
                         <span class="btn btn-default">
-                            Browse <input type="file" style="display: none;" accept=".csv, .xls, .xlsx">
+                            Browse<input type="file" id="fileInput" name="fileInput" accept=".csv, .xls, .xlsx" style="display: none;">
                         </span>
-                    </label>
-                    <label class="input-group-btn">
-                        <button class="btn btn-primary" name="submit" type="submit">Upload</button>
                     </label>
                 </div>
             </div>
@@ -53,19 +50,23 @@
             </thead>
             <tbody></tbody>
         </table>
+            <div class="form-group">
+                <button id="submitUpload" class="btn btn-primary" type="submit">Upload</button>
+            </div>
+        </form>
     </div>
     <div id="menu2" class="tab-pane fade">
         <h4>Download Key Pairs</h4>
         @using (Html.BeginForm("Download", "Dashboard"))
         {
-        <div class="form-group">
-            @*
-            @Html.HiddenFor(p => p.ResearchProject.ProjectID)
-        @Html.RadioButtonFor(p => p.DownloadType, 1, new { @checked = "true" }) Accession Numbers&nbsp;
-        @Html.RadioButtonFor(p => p.DownloadType, 2) MRNs&nbsp;
-        @Html.RadioButtonFor(p => p.DownloadType, 3) Both
-            *@
-        </div>
+            <div class="form-group">
+                @*
+                        @Html.HiddenFor(p => p.ResearchProject.ProjectID)
+                    @Html.RadioButtonFor(p => p.DownloadType, 1, new { @checked = "true" }) Accession Numbers&nbsp;
+                    @Html.RadioButtonFor(p => p.DownloadType, 2) MRNs&nbsp;
+                    @Html.RadioButtonFor(p => p.DownloadType, 3) Both
+                *@
+            </div>
             <button type="submit" class="btn btn-primary">Download</button>
         }
     </div>
@@ -77,5 +78,5 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/dashboard_project_dashboard")
+    @Scripts.Render("~/bundles/ProjectDashboard")
 }
