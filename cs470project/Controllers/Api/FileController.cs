@@ -15,11 +15,11 @@ namespace cs470project.Controllers.Api
 
         // POST: /Api/FileController/Upload
         [HttpPost]
-        public async Task<HttpResponseMessage> Upload()
+        public async Task<IHttpActionResult> Upload()
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                return BadRequest();
             }
 
             string root = HttpContext.Current.Server.MapPath("~/App_Data");
@@ -33,11 +33,11 @@ namespace cs470project.Controllers.Api
 
                 var fileName = file.Headers.ContentDisposition.FileName;
 
-                return Request.CreateResponse(HttpStatusCode.OK, fileName);
+                return Ok(fileName);
             }
             catch (System.Exception e)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
+                return InternalServerError(e);
             }
         }
     }

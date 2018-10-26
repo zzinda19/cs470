@@ -72,13 +72,18 @@ namespace cs470project.Controllers
 
         // POST: Dashboard/Upload
         [HttpPost]
-        public ActionResult Upload(DashboardViewModel viewModel)
+        public ActionResult Upload(ProjectApiViewModel viewModel, HttpPostedFileBase File)
         {
-            var id = viewModel.ResearchProject.ProjectID;
+            var id = viewModel.ProjectID;
 
+            if (Request.Files[0] == null)
+            {
+                return Content("No file found.");
+            }
 
+            return Content(Request.Files[0].FileName);
 
-            return RedirectToAction("ProjectDashboard/" + id, "Dashboard");
+            //return RedirectToAction("ProjectDashboard/" + id, "Dashboard#uploadMenu");
         }
 
         // POST: Dashboard/Download

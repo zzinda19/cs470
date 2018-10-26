@@ -24,7 +24,7 @@ var uploadForm = {
 
     Initialize: function () {
         uploadForm.SetBrowseFileHandler();
-        //uploadForm.SetUploadFileHandler();
+        uploadForm.SetUploadFileHandler();
     },
 
     SetBrowseFileHandler: function () {
@@ -40,22 +40,34 @@ var uploadForm = {
     },
 
     SetUploadFileHandler: function () {
-        $("#uploadForm").on("submit", function () {
+        $("#uploadForm").on("submit", function (e) {
+            e.preventDefault();
+
             var fileInput = $("#fileInput");
+
+            console.log(fileInput);
             var file = fileInput[0].files[0];
 
+            console.log(file);
+
+            var formData = new FormData();
+            formData.append("uploadFile", file);
+            console.log(formData);
+
             $.ajax({
-                url: '/Api/File/Upload',
-                method: 'post',
-                data: file,
+                url: "/Api/File/Upload",
+                method: "post",
+                data: formData,
+                contentType: false,
+                processData: false,
                 success: function (data) {
-                    toastr.success("File successfully uploaded." + data);
+                    toastr.success(data);
                 },
                 error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
                 }
             });
-
+            
             return false;
         });
     }

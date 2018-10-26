@@ -8,9 +8,9 @@
 <br />
 <ul class="nav nav-tabs nav-justified">
     <li class="active"><a data-toggle="tab" href="#home">Details</a></li>
-    <li><a data-toggle="tab" href="#menu1">Upload</a></li>
-    <li><a data-toggle="tab" href="#menu2">Download</a></li>
-    <li><a data-toggle="tab" href="#menu3">IAM</a></li>
+    <li><a data-toggle="tab" href="#uploadMenu">Upload</a></li>
+    <li><a data-toggle="tab" href="#downloadMenu">Download</a></li>
+    <li><a data-toggle="tab" href="#usersMenu">IAM</a></li>
 </ul>
 
 <div class="tab-content">
@@ -27,9 +27,9 @@
             @Html.ActionLink("Edit Project", "EditProject", "Dashboard", new { id = Model.ProjectID }, new { @class = "btn btn-primary" })
         </p>
     </div>
-    <div id="menu1" class="tab-pane fade">
+    <div id="uploadMenu" class="tab-pane fade">
         <h4>Upload Accession Numbers</h4>
-        <form id="uploadForm" class="form-inline" enctype="multipart/form-data" method="POST" action="/Api/File/Upload">
+        <form id="uploadForm" class="form-inline" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="input-group">
                     <input id="fileName" type="text" class="form-control" readonly>
@@ -55,7 +55,7 @@
             </div>
         </form>
     </div>
-    <div id="menu2" class="tab-pane fade">
+    <div id="downloadMenu" class="tab-pane fade">
         <h4>Download Key Pairs</h4>
         @using (Html.BeginForm("Download", "Dashboard"))
         {
@@ -70,7 +70,7 @@
             <button type="submit" class="btn btn-primary">Download</button>
         }
     </div>
-    <div id="menu3" class="tab-pane fade">
+    <div id="usersMenu" class="tab-pane fade">
         <h4>User Permissions</h4>
         <p>Data table here.</p>
     </div>
