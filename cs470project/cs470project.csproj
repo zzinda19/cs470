@@ -263,6 +263,9 @@
     <Compile Include="Models\ResearchProjectTag.cs">
       <DependentUpon>CCFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccessionAPIViewModel.cs" />
@@ -455,6 +458,10 @@
       <DependentUpon>CCFModel.edmx</DependentUpon>
       <LastGenOutput>CCFModel.cs</LastGenOutput>
     </Content>
+    <Content Include="obj\Debug\cs470project.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\TempPE\Models.CCFModel.Context.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Models.CCFModel.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Models.CCFModel.Designer.cs.dll" />
     <Content Include="Scripts\bootbox.js" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -474,6 +481,10 @@
     </Content>
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
+    <Content Include="obj\Debug\cs470project.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\CCFModel.csdl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\CCFModel.msl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Models\CCFModel.ssdl" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
@@ -604,6 +615,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="bin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
