@@ -31,6 +31,17 @@
         <h4>Upload Accession Numbers</h4>
         <form id="uploadForm" class="form-inline" method="post" enctype="multipart/form-data">
             <div class="form-group">
+                <label for="hasHeader">Does this file have a header?</label>
+                <br />
+                <div class="radio-inline">
+                    <input type="radio" name="hasHeader" value="yes" checked>Yes
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" name="hasHeader" value="no">No
+                </div>
+            </div>
+            <br /><br />
+            <div class="form-group">
                 <div class="input-group">
                     <input id="fileName" type="text" class="form-control" readonly>
                     <label class="input-group-btn">
@@ -38,10 +49,11 @@
                             Browse<input type="file" id="fileInput" name="fileInput" accept=".csv, .xls, .xlsx" style="display: none;">
                         </span>
                     </label>
-                </div>
+                </div> &nbsp;
+                <button id="submitUpload" class="btn btn-primary" type="submit">Upload</button>
             </div>
         </form>
-
+        <br />
         <table id="researchAccessions" class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -50,10 +62,7 @@
             </thead>
             <tbody></tbody>
         </table>
-            <div class="form-group">
-                <button id="submitUpload" class="btn btn-primary" type="submit">Upload</button>
-            </div>
-        </form>
+
     </div>
     <div id="downloadMenu" class="tab-pane fade">
         <h4>Download Key Pairs</h4>

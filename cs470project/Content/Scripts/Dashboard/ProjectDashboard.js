@@ -29,6 +29,7 @@ var uploadForm = {
 
     SetBrowseFileHandler: function () {
         var fileInput = $("#fileInput");
+        $("#fileName").val("");
 
         fileInput.on("change", function () {
             console.log(fileInput);
@@ -40,36 +41,40 @@ var uploadForm = {
     },
 
     SetUploadFileHandler: function () {
+        var id = $("#projectID").val();
+        
         $("#uploadForm").on("submit", function (e) {
+            // Prevent the default form action so that the page is not refreshed upon user upload.
             e.preventDefault();
 
-            var id = $("#projectID").val();
-
+            // Obtain the inputted file.
             var fileInput = $("#fileInput");
-
-            console.log(fileInput);
             var file = fileInput[0].files[0];
 
-            console.log(file);
+            // Obtain whether or not the file has a header.
+            var headerValue = $("input[name='hasHeader']:checked").val();
 
+            // Create FormData object and add the file and header values.
             var formData = new FormData();
             formData.append("uploadFile", file);
-            console.log(formData);
+            formData.append("hasHeader", headerValue);
 
+            // Post the form to the Api FileController Upload method.
             $.ajax({
-                url: "/Api/File/Upload/" + id,
+                url: "/Api/File/" + id,
                 method: "post",
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    toastr.success(data);
+                    toastr.success("Accession numbers successfully uploaded.");
                 },
                 error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
                 }
             });
-            
+
+            // Prevent page refresh upon submit.
             return false;
         });
     }
