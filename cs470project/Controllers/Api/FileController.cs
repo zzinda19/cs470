@@ -15,7 +15,7 @@ namespace cs470project.Controllers.Api
 
         // POST: /Api/FileController/Upload
         [HttpPost]
-        public async Task<IHttpActionResult> Upload()
+        public async Task<IHttpActionResult> Upload(int id)
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -35,7 +35,7 @@ namespace cs470project.Controllers.Api
 
                 return Ok(fileName);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 return InternalServerError(e);
             }

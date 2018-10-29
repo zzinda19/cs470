@@ -43,6 +43,8 @@ var uploadForm = {
         $("#uploadForm").on("submit", function (e) {
             e.preventDefault();
 
+            var id = $("#projectID").val();
+
             var fileInput = $("#fileInput");
 
             console.log(fileInput);
@@ -55,7 +57,7 @@ var uploadForm = {
             console.log(formData);
 
             $.ajax({
-                url: "/Api/File/Upload",
+                url: "/Api/File/Upload/" + id,
                 method: "post",
                 data: formData,
                 contentType: false,
