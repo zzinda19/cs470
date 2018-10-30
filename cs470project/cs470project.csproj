@@ -246,6 +246,7 @@
     <Compile Include="Models\FACT_Procedure.cs">
       <DependentUpon>CCFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FileUploadHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ResearchProject.cs">

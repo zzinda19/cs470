@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Http;
 using System.IO;
 using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
+using cs470project.Models;
 
 namespace cs470project.Controllers.Api
 {
@@ -22,13 +22,13 @@ namespace cs470project.Controllers.Api
          *  Parameters:   int id - Project ID, passed through hidden form in ProjectDashboard.cshtml,
          *                         included so that the accession numbers are added to the correct project.
          */
-        // POST: /Api/FileController/Upload
+        // POST: /Api/File/1
         [HttpPost]
         public async Task<IHttpActionResult> Upload(int id)
         {
             if (!Request.Content.IsMimeMultipartContent())
             {
-                return BadRequest();
+                return BadRequest("File improperly formatted.");
             }
 
             string root = HttpContext.Current.Server.MapPath("~/App_Data");
@@ -39,26 +39,41 @@ namespace cs470project.Controllers.Api
                 await Request.Content.ReadAsMultipartAsync(provider);
 
                 var file = provider.FileData[0];
+                string fileName = file.LocalFileName;
 
-                Excel.Application xlApp = new Excel.Application();
-                Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(file.LocalFileName);
-                Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
-                Excel.Range xlRange = xlWorksheet.UsedRange;
+                string hasHeaderFormValue = provider.FormData.GetValues("hasHeader")[0];                
+                bool hasHeader = hasHeaderFormValue.Contains("yes") ? true : false;
 
-                int rowCount = xlRange.Rows.Count;
-                int colCount = xlRange.Columns.Count;
+                FileUploadHelper helper = new FileUploadHelper();
+                List<string> accessionNumbers = helper.ParseFileToList(fileName, hasHeader);
 
-                string hasHeader = provider.FormData.GetValues("hasHeader")[0];                
-                int startingIndex = hasHeader.Contains("no") ? 1 : 2;
-
-                List<string> accessions = new List<string>();
-                for (int i = startingIndex; i <= rowCount; i++)
+                using (var context = new CCFDataEntities())
                 {
-                    if (xlRange.Cells[i, 1] != null && xlRange.Cells[i, 1].Value2 != null)
-                        accessions.Add(xlRange.Cells[i, 1].Value2.ToString());
+                    var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
+
+                    if (researchProjectInDb == null)
+                    {
+                        return BadRequest("The selected research project does not exist.");
+                    }
+
+                    foreach(var accessionNumber in accessionNumbers)
+                    {
+                        var accession = new ResearchProjectAccession()
+                        {
+                            ResearchProject = researchProjectInDb,
+                            Accession = Convert.ToInt32(accessionNumber),
+                            AlternateGUID = Guid.NewGuid()
+                        };
+                        context.ResearchProjectAccessions.Add(accession);
+                        context.SaveChanges();
+                    }
                 }
 
-                return Ok(accessions);
+                return Ok();
+            }
+            catch (InvalidCastException e)
+            {
+                return InternalServerError(e);
             }
             catch (Exception e)
             {

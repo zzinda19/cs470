@@ -68,6 +68,7 @@ var uploadForm = {
                 processData: false,
                 success: function (data) {
                     toastr.success("Accession numbers successfully uploaded.");
+                    console.log(data);
                 },
                 error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
