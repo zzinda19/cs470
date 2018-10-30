@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace cs470project.Models
@@ -44,6 +45,19 @@ namespace cs470project.Models
                         list.Add(xlRange.Cells[i, 1].Value2.ToString());
                     }
                 }
+
+                // Release, close, and shut down Excel processes.
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Marshal.ReleaseComObject(xlRange);
+                Marshal.ReleaseComObject(xlWorksheet);
+
+                xlWorkbook.Close();
+                Marshal.ReleaseComObject(xlWorkbook);
+
+                xlApp.Quit();
+                Marshal.ReleaseComObject(xlApp);
 
                 return list;
             }
