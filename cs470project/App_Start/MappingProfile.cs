@@ -24,11 +24,11 @@ namespace cs470project.App_Start
 
             //Research Accession Mapping
             // Domain to Dto
-            CreateMap<ResearchProjectAccession, ResearchAccessionDto>();
+            CreateMap<ResearchProjectAccession, AccessionDto>();
             // .ForMember;
 
             // Dto to Domain
-            CreateMap<ResearchAccessionDto, ResearchProjectAccession>();
+            CreateMap<AccessionDto, ResearchProjectAccession>();
                 //.ForMember()
                 //.ForMember();
         }

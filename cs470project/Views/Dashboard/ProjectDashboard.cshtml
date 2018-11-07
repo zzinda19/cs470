@@ -66,18 +66,24 @@
     </div>
     <div id="downloadMenu" class="tab-pane fade">
         <h4>Download Key Pairs</h4>
-        @using (Html.BeginForm("Download", "Dashboard"))
-        {
+        <form id="downloadForm">
             <div class="form-group">
-                @*
-                        @Html.HiddenFor(p => p.ResearchProject.ProjectID)
-                    @Html.RadioButtonFor(p => p.DownloadType, 1, new { @checked = "true" }) Accession Numbers&nbsp;
-                    @Html.RadioButtonFor(p => p.DownloadType, 2) MRNs&nbsp;
-                    @Html.RadioButtonFor(p => p.DownloadType, 3) Both
-                *@
+                <label for="downloadType">Which set of key pairs would you like to download?</label>
+                <br />
+                <div class="radio-inline">
+                    <input type="radio" name="downloadType" value="1" checked>Accessions Only
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" name="downloadType" value="2">MRNs Only
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" name="downloadType" value="3">Both
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Download</button>
-        }
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Download</button>
+            </div>
+        </form>
     </div>
     <div id="usersMenu" class="tab-pane fade">
         <h4>User Permissions</h4>

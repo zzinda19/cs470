@@ -19,7 +19,7 @@ namespace cs470project.Controllers.Api
             {
                 var researchAccessions = context.ResearchProjectAccessions
                     .ToList()
-                    .Select(Mapper.Map<ResearchProjectAccession, ResearchAccessionDto>);
+                    .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
 
                 return Ok(researchAccessions);
             }
@@ -37,7 +37,7 @@ namespace cs470project.Controllers.Api
                     return NotFound();
                 }
 
-                return Ok(Mapper.Map<ResearchAccessionDto>(researchAccession));
+                return Ok(Mapper.Map<AccessionDto>(researchAccession));
             }
         }
 

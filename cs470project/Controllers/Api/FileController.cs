@@ -7,7 +7,9 @@ using System.Web;
 using System.Web.Http;
 using System.IO;
 using System.Threading.Tasks;
+using AutoMapper;
 using cs470project.Models;
+using cs470project.Dtos;
 
 namespace cs470project.Controllers.Api
 {
@@ -15,12 +17,12 @@ namespace cs470project.Controllers.Api
     {
 
         /**
-         *  Author:       Zak Zinda
+         *  Author: Zak Zinda
          *  Date Updated: 10.29.18
-         *  Description:  Top-level method for adding user-uploaded accession numbers
-         *                to the project database.
-         *  Parameters:   int id - Project ID, passed through hidden form in ProjectDashboard.cshtml,
-         *                         included so that the accession numbers are added to the correct project.
+         *  Description: Top-level method for adding user-uploaded accession numbers
+         *               to the project database.
+         *  Parameters: int id - Project ID, passed through hidden form in ProjectDashboard.cshtml,
+         *                       included so that the accession numbers are added to the correct project.
          */
         // POST: /Api/File/1
         [HttpPost]
@@ -79,6 +81,51 @@ namespace cs470project.Controllers.Api
             {
                 return InternalServerError(e);
             }
+        }
+
+        // GET: /Api/File/1
+        [Route("Api/File/Download/")]
+        [HttpPost]
+        public IHttpActionResult Download(DownloadRequestDto downloadRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Download request is incomplete.");
+            }
+
+            using (var context = new CCFDataEntities())
+            {
+                var id = downloadRequest.ProjectId;
+
+                var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
+
+                if (researchProjectInDb == null)
+                {
+                    return BadRequest("The selected research project does not exist.");
+                }
+
+                var downloadType = downloadRequest.DownloadType;
+
+                switch (downloadType)
+                {
+                    case DownloadType.AccessionOnly:
+                        var accesionKeyPairs = context.ResearchProjectAccessions
+                            .Where(p => p.ProjectID == id)
+                            .ToList()
+                            .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
+                        return Ok(accesionKeyPairs);
+                    case DownloadType.MRNOnly:
+                        
+                        break;
+                    case DownloadType.Both:
+
+                        break;
+                    default:
+                        return BadRequest("Improper key-pair type submitted.");
+                }
+
+                return BadRequest(Convert.ToString(id));
+            }     
         }
     }
 }

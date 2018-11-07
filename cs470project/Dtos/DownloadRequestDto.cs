@@ -6,12 +6,11 @@ using System.Web;
 
 namespace cs470project.Dtos
 {
-    public class ResearchAccessionDto
+    public class DownloadRequestDto
     {
-        public int ProjectID { get; set; }
-
         [Required]
-        public int Accession { get; set; }
-
+        public int ProjectId { get; set; }
+        [Required]
+        public int DownloadType { get; set; }
     }
 }
