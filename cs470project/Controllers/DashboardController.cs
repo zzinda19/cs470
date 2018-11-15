@@ -4,6 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
+using cs470project.Dtos;
 using cs470project.Models;
 using cs470project.ViewModels;
 
@@ -88,24 +90,55 @@ namespace cs470project.Controllers
 
         // POST: Dashboard/Download
         [HttpPost]
-        public ActionResult Download(DashboardViewModel viewModel)
+        public FileContentResult Download(DownloadRequestDto downloadRequest)
         {
-            var id = viewModel.ResearchProject.ProjectID;
+            var sb = new System.Text.StringBuilder();
+            var fileName = "";
 
-            switch (viewModel.DownloadType)
+            using (var context = new CCFDataEntities())
             {
-                case DownloadType.AccessionOnly:
-                    // Create Accessions Only File and Download
-                    return RedirectToAction("ProjectDashboard/" + id, "Dashboard");
-                case DownloadType.MRNOnly:
-                    // Create MRN Only File and Download
-                    return RedirectToAction("ProjectDashboard/" + id, "Dashboard");
-                case DownloadType.Both:
-                    // Create Both File and Download
-                    return RedirectToAction("ProjectDashboard/" + id, "Dashboard");
-                default:
-                    return HttpNotFound();
-            }   
+                var id = downloadRequest.ProjectId;
+
+                var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
+
+                if (researchProjectInDb == null)
+                {
+                    
+                }
+
+                var downloadType = downloadRequest.DownloadType;
+
+                switch (downloadType)
+                {
+                    case DownloadType.AccessionOnly:
+                        fileName = "AccessionKeyPairs.csv";
+                        var accessionKeyPairs = context.ResearchProjectAccessions
+                            .Where(p => p.ProjectID == id)
+                            .ToList()
+                            .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
+
+                        sb.Append("Accession,AlternateGuid\r\n");
+                        foreach (var keyPair in accessionKeyPairs)
+                        {
+                            sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
+                            sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                        }
+                        break;
+                    case DownloadType.MRNOnly:
+                        fileName = "MRNKeyPairs.csv";
+
+                        break;
+                    case DownloadType.Both:
+                        fileName = "AccessionAndMRNKeyPairs.csv";
+
+                        break;
+                    default:
+                        break;
+                }
+
+                string file = sb.ToString();
+                return File(new System.Text.UTF8Encoding().GetBytes(file), "text/csv", fileName);
+            }
         }
     }
 }

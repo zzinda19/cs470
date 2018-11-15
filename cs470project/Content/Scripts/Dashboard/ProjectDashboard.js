@@ -103,11 +103,11 @@ var downloadForm = {
             };
 
             $.ajax({
-                url: "/Api/File/Download/",
-                method: "post",
+                url: "/Api/File/Download",
+                method: "get",
                 data: vm,
                 success: function (data) {
-                    console.log(data);
+                    window.location = "/Api/File/Download";
                 },
                 error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);

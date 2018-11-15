@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using cs470project.Models;
 using cs470project.Dtos;
+using System.Text;
+using System.Net.Http.Headers;
 
 namespace cs470project.Controllers.Api
 {
@@ -93,6 +95,9 @@ namespace cs470project.Controllers.Api
                 return BadRequest("Download request is incomplete.");
             }
 
+            var sb = new StringBuilder();
+            var fileName = "";
+
             using (var context = new CCFDataEntities())
             {
                 var id = downloadRequest.ProjectId;
@@ -109,22 +114,44 @@ namespace cs470project.Controllers.Api
                 switch (downloadType)
                 {
                     case DownloadType.AccessionOnly:
-                        var accesionKeyPairs = context.ResearchProjectAccessions
+                        fileName = "AccessionKeyPairs.csv";
+                        var accessionKeyPairs = context.ResearchProjectAccessions
                             .Where(p => p.ProjectID == id)
                             .ToList()
                             .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
-                        return Ok(accesionKeyPairs);
+
+                        sb.Append("Accession,AlternateGuid\r\n");
+                        foreach(var keyPair in accessionKeyPairs)
+                        {
+                            sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
+                            sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                        }
+                        break;
                     case DownloadType.MRNOnly:
+                        fileName = "MRNKeyPairs.csv";
                         
                         break;
                     case DownloadType.Both:
+                        fileName = "AccessionAndMRNKeyPairs.csv";
 
                         break;
                     default:
                         return BadRequest("Improper key-pair type submitted.");
                 }
 
-                return BadRequest(Convert.ToString(id));
+                HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(sb.ToString())
+                };
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = fileName
+                };
+
+                var response = ResponseMessage(result);
+
+                return response;
             }     
         }
     }
