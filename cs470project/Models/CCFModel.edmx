@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CCFDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CCFDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="DIM_Patient">
           <Key>
             <PropertyRef Name="P_pat_itn" />
@@ -52,6 +52,7 @@
           <Property Name="AccessionPrefix" Type="varchar" MaxLength="50" />
           <Property Name="MRNPrefix" Type="varchar" MaxLength="50" />
           <Property Name="InsertDate" Type="datetime" Nullable="false" />
+          <Property Name="AdminID" Type="int" />
         </EntityType>
         <EntityType Name="ResearchProjectAccessions">
           <Key>
@@ -97,6 +98,35 @@
           <Property Name="TagText" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="RecordInsertDate" Type="smalldatetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="ResearchProjectUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Admin" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResearchUsers">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="255" />
+          <Property Name="LastName" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_ProjectID">
+          <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
+          <End Role="ResearchProjectUsers" Type="Self.ResearchProjectUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectUsers">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ResearchProjectAccessions_ProjectID">
           <End Role="ResearchProject" Type="Self.ResearchProject" Multiplicity="1" />
           <End Role="ResearchProjectAccessions" Type="Self.ResearchProjectAccessions" Multiplicity="*" />
@@ -159,6 +189,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserID">
+          <End Role="ResearchUsers" Type="Self.ResearchUsers" Multiplicity="1" />
+          <End Role="ResearchProjectUsers" Type="Self.ResearchProjectUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchUsers">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ResearchProjectUsers">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="CCFDataModelStoreContainer">
           <EntitySet Name="DIM_Patient" EntityType="Self.DIM_Patient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DIM_Study" EntityType="Self.DIM_Study" Schema="dbo" store:Type="Tables" />
@@ -168,6 +210,12 @@
           <EntitySet Name="ResearchProjectAccessionTags" EntityType="Self.ResearchProjectAccessionTags" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchProjectPatients" EntityType="Self.ResearchProjectPatients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchProjectTags" EntityType="Self.ResearchProjectTags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchProjectUsers" EntityType="Self.ResearchProjectUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResearchUsers" EntityType="Self.ResearchUsers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ProjectID" Association="Self.FK_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProject" />
+            <End Role="ResearchProjectUsers" EntitySet="ResearchProjectUsers" />
+          </AssociationSet>
           <AssociationSet Name="FK_ResearchProjectAccessions_ProjectID" Association="Self.FK_ResearchProjectAccessions_ProjectID">
             <End Role="ResearchProject" EntitySet="ResearchProject" />
             <End Role="ResearchProjectAccessions" EntitySet="ResearchProjectAccessions" />
@@ -188,9 +236,12 @@
             <End Role="ResearchProject" EntitySet="ResearchProject" />
             <End Role="ResearchProjectTags" EntitySet="ResearchProjectTags" />
           </AssociationSet>
+          <AssociationSet Name="FK_UserID" Association="Self.FK_UserID">
+            <End Role="ResearchUsers" EntitySet="ResearchUsers" />
+            <End Role="ResearchProjectUsers" EntitySet="ResearchProjectUsers" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CCFDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -244,6 +295,9 @@
           <NavigationProperty Name="ResearchProjectAccessions" Relationship="Self.FK_ResearchProjectAccessions_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectAccessions" />
           <NavigationProperty Name="ResearchProjectPatients" Relationship="Self.FK_ResearchProjectPatients_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectPatients" />
           <NavigationProperty Name="ResearchProjectTags" Relationship="Self.FK_ResearchProjectTags_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectTags" />
+          <Property Name="AdminID" Type="Int32" />
+          <NavigationProperty Name="ResearchUser" Relationship="CCFDataModel.FK_ProjectAdmin" FromRole="ResearchProject" ToRole="ResearchUser" />
+          <NavigationProperty Name="ResearchProjectUsers" Relationship="CCFDataModel.FK_ProjectID" FromRole="ResearchProject" ToRole="ResearchProjectUser" />
         </EntityType>
         <EntityType Name="ResearchProjectAccession">
           <Key>
@@ -387,7 +441,78 @@
             <End Role="ResearchProjectTags" EntitySet="ResearchProjectTags" />
             <End Role="ResearchProjectAccessionTags" EntitySet="ResearchProjectAccessionTags" />
           </AssociationSet>
+          <EntitySet Name="ResearchProjectUsers" EntityType="CCFDataModel.ResearchProjectUser" />
+          <EntitySet Name="ResearchUsers" EntityType="CCFDataModel.ResearchUser" />
+          <AssociationSet Name="FK_ProjectAdmin" Association="CCFDataModel.FK_ProjectAdmin">
+            <End Role="ResearchUser" EntitySet="ResearchUsers" />
+            <End Role="ResearchProject" EntitySet="ResearchProjects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectID" Association="CCFDataModel.FK_ProjectID">
+            <End Role="ResearchProject" EntitySet="ResearchProjects" />
+            <End Role="ResearchProjectUser" EntitySet="ResearchProjectUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserID" Association="CCFDataModel.FK_UserID">
+            <End Role="ResearchUser" EntitySet="ResearchUsers" />
+            <End Role="ResearchProjectUser" EntitySet="ResearchProjectUsers" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ResearchProjectUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Admin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ResearchProject" Relationship="CCFDataModel.FK_ProjectID" FromRole="ResearchProjectUser" ToRole="ResearchProject" />
+          <NavigationProperty Name="ResearchUser" Relationship="CCFDataModel.FK_UserID" FromRole="ResearchProjectUser" ToRole="ResearchUser" />
+        </EntityType>
+        <EntityType Name="ResearchUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ResearchProjects" Relationship="CCFDataModel.FK_ProjectAdmin" FromRole="ResearchUser" ToRole="ResearchProject" />
+          <NavigationProperty Name="ResearchProjectUsers" Relationship="CCFDataModel.FK_UserID" FromRole="ResearchUser" ToRole="ResearchProjectUser" />
+        </EntityType>
+        <Association Name="FK_ProjectAdmin">
+          <End Type="CCFDataModel.ResearchUser" Role="ResearchUser" Multiplicity="0..1" />
+          <End Type="CCFDataModel.ResearchProject" Role="ResearchProject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ResearchProject">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectID">
+          <End Type="CCFDataModel.ResearchProject" Role="ResearchProject" Multiplicity="1" />
+          <End Type="CCFDataModel.ResearchProjectUser" Role="ResearchProjectUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="ResearchProjectUser">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserID">
+          <End Type="CCFDataModel.ResearchUser" Role="ResearchUser" Multiplicity="1" />
+          <End Type="CCFDataModel.ResearchProjectUser" Role="ResearchProjectUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResearchUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ResearchProjectUser">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -436,6 +561,7 @@
           <EntitySetMapping Name="ResearchProjects">
             <EntityTypeMapping TypeName="CCFDataModel.ResearchProject">
               <MappingFragment StoreEntitySet="ResearchProject">
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
                 <ScalarProperty Name="ProjectDescription" ColumnName="ProjectDescription" />
@@ -486,6 +612,25 @@
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="TagText" ColumnName="TagText" />
                 <ScalarProperty Name="RecordInsertDate" ColumnName="RecordInsertDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchProjectUsers">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchProjectUser">
+              <MappingFragment StoreEntitySet="ResearchProjectUsers">
+                <ScalarProperty Name="Admin" ColumnName="Admin" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResearchUsers">
+            <EntityTypeMapping TypeName="CCFDataModel.ResearchUser">
+              <MappingFragment StoreEntitySet="ResearchUsers">
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

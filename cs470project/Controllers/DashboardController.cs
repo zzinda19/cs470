@@ -33,9 +33,9 @@ namespace cs470project.Controllers
                     return HttpNotFound();
                 }
 
-                var viewModel = new ProjectApiViewModel
+                var viewModel = new DashboardViewModel
                 {
-                    ProjectID = researchProject.ProjectID
+                    ProjectId = researchProject.ProjectID
                 };
 
                 return View(viewModel);
@@ -62,9 +62,9 @@ namespace cs470project.Controllers
                     return HttpNotFound();
                 }
 
-                var viewModel = new ProjectApiViewModel
+                var viewModel = new DashboardViewModel
                 {
-                    ProjectID = researchProject.ProjectID
+                    ProjectId = researchProject.ProjectID
                 };
 
                 return View(viewModel);
@@ -74,9 +74,9 @@ namespace cs470project.Controllers
 
         // POST: Dashboard/Upload
         [HttpPost]
-        public ActionResult Upload(ProjectApiViewModel viewModel, HttpPostedFileBase File)
+        public ActionResult Upload(DashboardViewModel viewModel, HttpPostedFileBase File)
         {
-            var id = viewModel.ProjectID;
+            var id = viewModel.ProjectId;
 
             if (Request.Files[0] == null)
             {
@@ -90,23 +90,23 @@ namespace cs470project.Controllers
 
         // POST: Dashboard/Download
         [HttpPost]
-        public FileContentResult Download(DownloadRequestDto downloadRequest)
+        public ActionResult Download(DashboardViewModel viewModel)
         {
             var sb = new System.Text.StringBuilder();
             var fileName = "";
 
             using (var context = new CCFDataEntities())
             {
-                var id = downloadRequest.ProjectId;
+                var id = viewModel.ProjectId;
 
                 var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
 
                 if (researchProjectInDb == null)
                 {
-                    
+                    return HttpNotFound();
                 }
 
-                var downloadType = downloadRequest.DownloadType;
+                var downloadType = viewModel.DownloadType;
 
                 switch (downloadType)
                 {
@@ -117,16 +117,39 @@ namespace cs470project.Controllers
                             .ToList()
                             .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
 
-                        sb.Append("Accession,AlternateGuid\r\n");
-                        foreach (var keyPair in accessionKeyPairs)
+                        if (accessionKeyPairs.Count() != 0)
                         {
-                            sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
-                            sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                            sb.Append("Accession,AlternateGuid\r\n");
+                            foreach (var keyPair in accessionKeyPairs)
+                            {
+                                sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
+                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                            }
+                        } 
+                        else
+                        {
+                            sb.Append("This project does not yet have any accession numbers uploaded.\r\n");
                         }
                         break;
                     case DownloadType.MRNOnly:
                         fileName = "MRNKeyPairs.csv";
-
+                        var MRNKeyPairs = context.ResearchProjectPatients
+                            .Where(p => p.ProjectID == id)
+                            .ToList()
+                            .Select(Mapper.Map<ResearchProjectPatient, MRNDto>);
+                        if (MRNKeyPairs.Count() != 0)
+                        {
+                            sb.Append("MRN,AlternateGuid\r\n");
+                            foreach (var keyPair in MRNKeyPairs)
+                            {
+                                sb.AppendFormat("=\"{0}\",", keyPair.MRN.ToString());
+                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                            }
+                        }
+                        else
+                        {
+                            sb.Append("This project does not yet have any MRNs uploaded.\r\n");
+                        }
                         break;
                     case DownloadType.Both:
                         fileName = "AccessionAndMRNKeyPairs.csv";

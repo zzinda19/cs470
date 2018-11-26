@@ -212,12 +212,15 @@
     <Compile Include="Controllers\Api\ResearchAccessionsController.cs" />
     <Compile Include="Controllers\Api\FileController.cs" />
     <Compile Include="Controllers\Api\ResearchProjectsController.cs" />
+    <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Dtos\AccessionDto.cs" />
     <Compile Include="Dtos\DownloadRequestDto.cs" />
+    <Compile Include="Dtos\MRNDto.cs" />
     <Compile Include="Dtos\ResearchProjectDto.cs" />
+    <Compile Include="Dtos\UserDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -264,6 +267,12 @@
       <DependentUpon>CCFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ResearchProjectTag.cs">
+      <DependentUpon>CCFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResearchProjectUser.cs">
+      <DependentUpon>CCFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResearchUser.cs">
       <DependentUpon>CCFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
@@ -446,6 +455,7 @@
     <Content Include="Content\bootstrap-cyborg.css" />
     <Content Include="Content\Scripts\Dashboard\UploadAccession.js" />
     <Content Include="Content\Scripts\Dashboard\ProjectDashboard.js" />
+    <Content Include="Content\Scripts\Dashboard\UsersTable.js" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
@@ -616,6 +626,8 @@
     <Content Include="Views\Dashboard\ProjectDashboard.cshtml" />
     <Content Include="Views\Dashboard\NewProject.cshtml" />
     <Content Include="Views\Dashboard\EditProject.cshtml" />
+    <Content Include="Views\Dashboard\ProjectDashboardPartials\_Upload.cshtml" />
+    <Content Include="Views\Dashboard\ProjectDashboardPartials\_Download.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

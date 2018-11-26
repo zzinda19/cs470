@@ -18,6 +18,11 @@
         <AssociationConnector Association="CCFDataModel.FK_ResearchProjectTags_ProjectID" ManuallyRouted="false" />
         <AssociationConnector Association="CCFDataModel.FK_ResearchProjectAccessionTags_ResearchProjectAccession" ManuallyRouted="false" />
         <AssociationConnector Association="CCFDataModel.FK_ResearchProjectAccessionTags_ResearchProjectTags" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="CCFDataModel.ResearchProjectUser" Width="1.5" PointX="8" PointY="9.5" />
+        <EntityTypeShape EntityType="CCFDataModel.ResearchUser" Width="1.5" PointX="0.5" PointY="8.5" />
+        <AssociationConnector Association="CCFDataModel.FK_ProjectAdmin" />
+        <AssociationConnector Association="CCFDataModel.FK_ProjectID" />
+        <AssociationConnector Association="CCFDataModel.FK_UserID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -73,7 +73,7 @@ namespace cs470project.Controllers.Api
                     }
                 }
 
-                return Ok();
+                return Ok(accessionNumbers);
             }
             catch (InvalidCastException e)
             {

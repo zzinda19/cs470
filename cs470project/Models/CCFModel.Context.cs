@@ -33,5 +33,7 @@ namespace cs470project.Models
         public virtual DbSet<ResearchProjectAccessionTag> ResearchProjectAccessionTags { get; set; }
         public virtual DbSet<ResearchProjectPatient> ResearchProjectPatients { get; set; }
         public virtual DbSet<ResearchProjectTag> ResearchProjectTags { get; set; }
+        public virtual DbSet<ResearchProjectUser> ResearchProjectUsers { get; set; }
+        public virtual DbSet<ResearchUser> ResearchUsers { get; set; }
     }
 }

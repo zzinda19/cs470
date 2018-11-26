@@ -20,6 +20,7 @@ namespace cs470project.Models
             this.ResearchProjectAccessions = new HashSet<ResearchProjectAccession>();
             this.ResearchProjectPatients = new HashSet<ResearchProjectPatient>();
             this.ResearchProjectTags = new HashSet<ResearchProjectTag>();
+            this.ResearchProjectUsers = new HashSet<ResearchProjectUser>();
         }
     
         public int ProjectID { get; set; }
@@ -28,6 +29,7 @@ namespace cs470project.Models
         public string AccessionPrefix { get; set; }
         public string MRNPrefix { get; set; }
         public System.DateTime InsertDate { get; set; }
+        public Nullable<int> AdminID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ResearchProjectAccession> ResearchProjectAccessions { get; set; }
@@ -35,5 +37,8 @@ namespace cs470project.Models
         public virtual ICollection<ResearchProjectPatient> ResearchProjectPatients { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ResearchProjectTag> ResearchProjectTags { get; set; }
+        public virtual ResearchUser ResearchUser { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ResearchProjectUser> ResearchProjectUsers { get; set; }
     }
 }
