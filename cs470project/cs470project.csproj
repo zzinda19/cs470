@@ -220,7 +220,8 @@
     <Compile Include="Dtos\DownloadRequestDto.cs" />
     <Compile Include="Dtos\MRNDto.cs" />
     <Compile Include="Dtos\ResearchProjectDto.cs" />
-    <Compile Include="Dtos\UserDto.cs" />
+    <Compile Include="Dtos\ResearchProjectUserDto.cs" />
+    <Compile Include="Dtos\ResearchUserDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -628,6 +629,7 @@
     <Content Include="Views\Dashboard\EditProject.cshtml" />
     <Content Include="Views\Dashboard\ProjectDashboardPartials\_Upload.cshtml" />
     <Content Include="Views\Dashboard\ProjectDashboardPartials\_Download.cshtml" />
+    <Content Include="Views\Dashboard\ProjectDashboardPartials\_Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

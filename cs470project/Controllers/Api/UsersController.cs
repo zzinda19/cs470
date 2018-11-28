@@ -24,24 +24,49 @@ namespace cs470project.Controllers.Api
         {
             using (var context = new CCFDataEntities())
             {
-                var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
+                var researchProjectInDb = context.ResearchProjects.SingleOrDefault(p => p.ProjectID == id);
 
                 if (researchProjectInDb == null)
                 {
-                    return BadRequest("The selected research project does not exist.");
+                    return BadRequest();
                 }
 
-                var researchUsers = context.ResearchUsers.ToList();
+                var researchProjectUsers = context.ResearchProjectUsers
+                    .Where(p => p.ProjectID == id)
+                    .Include(p => p.ResearchUser)
+                    .ToList()
+                    .Select(Mapper.Map<ResearchProjectUser, ResearchProjectUserDto>);
 
-                return Ok(researchUsers);
+                return Ok(researchProjectUsers);
             }
         }
 
+        /**
+         *  Author: Zak Zinda
+         *  Date Updated: 11.28.18
+         *  Description: Removes a selected user from a selected research project.
+         */
+        // DELETE /Api/Users/1
+        [Route("Api/Users/{projectId}/{userId}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteResearchProjectUser(int projectId, int userId)
+        {
+            using (var context = new CCFDataEntities())
+            {
+                var researchProjectUserInDb = context.ResearchProjectUsers
+                    .SingleOrDefault(p => p.ProjectID == projectId && p.UserID == userId);
 
+                if (researchProjectUserInDb == null)
+                {
+                    return NotFound();
+                }
 
+                context.ResearchProjectUsers.Remove(researchProjectUserInDb);
+                context.SaveChanges();
 
+                return Ok();
 
-
-
+            }
+        }
     }
 }

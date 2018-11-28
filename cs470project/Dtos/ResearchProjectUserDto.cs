@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using cs470project.Models;
 
 namespace cs470project.Dtos
 {
-    public class UserDto
+    public class ResearchProjectUserDto
     {
         [Required]
         public int UserID { get; set; }
 
-        public ResearchUser ResearchUser { get; set; }
+        [Required]
+        public ResearchUserDto ResearchUser { get; set; }
 
         [Required]
-        public byte Admin { get; set; }
+        public bool Admin { get; set; }
     }
 }

@@ -32,7 +32,10 @@ namespace cs470project.App_Start
             CreateMap<AccessionDto, ResearchProjectAccession>();
 
             // Domain to Dto
-            CreateMap<ResearchProjectUser, UserDto>();
+            CreateMap<ResearchProjectUser, ResearchProjectUserDto>();
+            CreateMap<ResearchUser, ResearchUserDto>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => string.Join(" ", src.FirstName,
+                src.LastName)));
         }
     }
 }
