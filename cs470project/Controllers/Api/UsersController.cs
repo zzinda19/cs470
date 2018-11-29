@@ -42,11 +42,23 @@ namespace cs470project.Controllers.Api
         }
 
         /**
+         * Author: Zak Zinda
+         * Date Updated: 11.29.18
+         * Description: Adds a user to a selected research project.
+         */
+        // POST /Api/Users/1
+        [HttpPost]
+        public IHttpActionResult AddResearchUserToProject(int id, Research)
+        {
+
+        }
+
+        /**
          *  Author: Zak Zinda
          *  Date Updated: 11.28.18
          *  Description: Removes a selected user from a selected research project.
          */
-        // DELETE /Api/Users/1
+        // DELETE /Api/Users/1/1
         [Route("Api/Users/{projectId}/{userId}")]
         [HttpDelete]
         public IHttpActionResult DeleteResearchProjectUser(int projectId, int userId)

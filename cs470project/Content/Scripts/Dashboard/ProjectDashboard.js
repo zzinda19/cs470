@@ -81,46 +81,7 @@ var uploadForm = {
     }
 };
 
-var downloadForm = {
-
-    Initialize: function () {
-        downloadForm.SetDownloadFileHandler();
-    },
-
-    SetDownloadFileHandler: function () {
-        var id = $("#projectID").val();
-
-        $("#downloadForm").on("submit", function (e) {
-            e.preventDefault();
-
-            var downloadType = $("input[name='downloadType']:checked").val();
-
-            console.log(downloadType);
-
-            var vm = {
-                ProjectId: id,
-                DownloadType: downloadType
-            };
-
-            $.ajax({
-                url: "/Api/File/Download",
-                method: "get",
-                data: vm,
-                success: function (data) {
-                    window.location = "/Api/File/Download";
-                },
-                error: function (xhr) {
-                    toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
-                }
-            });
-
-            return false;
-        });
-    }
-}
-
 $(document).ready(function () {
     layout.Initialize();
     uploadForm.Initialize();
-    downloadForm.Initialize();
 });
