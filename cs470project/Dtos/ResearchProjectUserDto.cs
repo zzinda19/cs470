@@ -9,9 +9,11 @@ namespace cs470project.Dtos
     public class ResearchProjectUserDto
     {
         [Required]
-        public int UserID { get; set; }
+        public int ProjectId { get; set; }
 
         [Required]
+        public int UserId { get; set; }
+
         public ResearchUserDto ResearchUser { get; set; }
 
         [Required]

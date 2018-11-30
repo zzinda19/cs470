@@ -10,22 +10,29 @@
     </thead>
     <tbody></tbody>
 </table>
-<div>
-    <button id="addUserButton" class="btn btn-primary">Add User</button>
-</div>
+@*<div>
+        <button id="addUserButton" class="btn btn-primary">Add User</button>
+    </div>*@
 
 @*Add User Form to be placed in Bootbox Modal.*@
-<div id="addUserFormDiv" hidden>
+<hr />
+<h4>Add Users</h4>
+<div id="addUserFormDiv">
     <form id="addUserForm" class="form-group">
         <div class="form-group">
             <label for="username">Username:</label>
-            <input id="username" name="username" class="form-control" type="text" required>
+            <div class="tt-container">
+                <input id="username" name="username" class="form-control" type="text" required>
+            </div>
         </div>
         <div class="form-group">
             <label for="admin">Role:</label>
             <br />
-            <label class="radio-inline"><input type="radio" name="admin" value="0" checked>User</label>
-            <label class="radio-inline"><input type="radio" name="admin" value="1">Admin</label>
+            <label class="radio-inline"><input type="radio" name="admin" value=false checked>User</label>
+            <label class="radio-inline"><input type="radio" name="admin" value=true>Admin</label>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Add User</button>
         </div>
     </form>
 </div>

@@ -12,6 +12,7 @@ namespace cs470project
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/bootbox.js",
                         "~/Scripts/toastr.js",
+                        "~/Scripts/typeahead.bundle.js",
                         "~/Scripts/DataTables/jquery.dataTables.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -30,6 +31,7 @@ namespace cs470project
                       "~/Content/bootstrap-cyborg.css",
                       "~/Content/DataTables/css/dataTables.bootstrap.css",
                       "~/Content/toastr.css",
+                      "~/Content/typeahead.css",
                       "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/dashboard_index").Include(

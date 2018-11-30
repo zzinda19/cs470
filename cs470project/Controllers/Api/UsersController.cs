@@ -1,83 +1,40 @@
-﻿using cs470project.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using System.Data.Entity;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using AutoMapper;
+using cs470project.Models;
 using cs470project.Dtos;
+using AutoMapper;
 
 namespace cs470project.Controllers.Api
 {
     public class UsersController : ApiController
     {
-        /**
-         *  Author: Zak Zinda
-         *  Date Updated: 11.15.18
-         *  Description: Returns a list of the users associated with a certain research project.
-         *  Parameters: int id - Project ID
-         */
-        // GET: /Api/Users/1
-        public IHttpActionResult GetResearchProjectUsers(int id)
+        // GET: /Api/Users
+        public IHttpActionResult GetUsers(string query = null)
         {
             using (var context = new CCFDataEntities())
             {
-                var researchProjectInDb = context.ResearchProjects.SingleOrDefault(p => p.ProjectID == id);
-
-                if (researchProjectInDb == null)
+                if (!String.IsNullOrWhiteSpace(query))
                 {
-                    return BadRequest();
-                }
+                    var usersQuery = context.ResearchUsers
+                        .Where(u => u.Username.Contains(query))
+                        .ToList()
+                        .Select(Mapper.Map<ResearchUser, ResearchUserDto>);
 
-                var researchProjectUsers = context.ResearchProjectUsers
-                    .Where(p => p.ProjectID == id)
-                    .Include(p => p.ResearchUser)
+                    return Ok(usersQuery);
+                }   
+                else
+                {
+                    var users = context.ResearchUsers
                     .ToList()
-                    .Select(Mapper.Map<ResearchProjectUser, ResearchProjectUserDto>);
+                    .Select(Mapper.Map<ResearchUser, ResearchUserDto>);
 
-                return Ok(researchProjectUsers);
-            }
-        }
-
-        /**
-         * Author: Zak Zinda
-         * Date Updated: 11.29.18
-         * Description: Adds a user to a selected research project.
-         */
-        // POST /Api/Users/1
-        [HttpPost]
-        public IHttpActionResult AddResearchUserToProject(int id, Research)
-        {
-
-        }
-
-        /**
-         *  Author: Zak Zinda
-         *  Date Updated: 11.28.18
-         *  Description: Removes a selected user from a selected research project.
-         */
-        // DELETE /Api/Users/1/1
-        [Route("Api/Users/{projectId}/{userId}")]
-        [HttpDelete]
-        public IHttpActionResult DeleteResearchProjectUser(int projectId, int userId)
-        {
-            using (var context = new CCFDataEntities())
-            {
-                var researchProjectUserInDb = context.ResearchProjectUsers
-                    .SingleOrDefault(p => p.ProjectID == projectId && p.UserID == userId);
-
-                if (researchProjectUserInDb == null)
-                {
-                    return NotFound();
+                    return Ok(users);
                 }
-
-                context.ResearchProjectUsers.Remove(researchProjectUserInDb);
-                context.SaveChanges();
-
-                return Ok();
-
             }
         }
     }

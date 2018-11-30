@@ -212,6 +212,7 @@
     <Compile Include="Controllers\Api\ResearchAccessionsController.cs" />
     <Compile Include="Controllers\Api\FileController.cs" />
     <Compile Include="Controllers\Api\ResearchProjectsController.cs" />
+    <Compile Include="Controllers\Api\ResearchUsersController.cs" />
     <Compile Include="Controllers\Api\UsersController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -241,41 +242,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CCFModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\DIM_Patient.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DIM_Study.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\DownloadType.cs" />
-    <Compile Include="Models\FACT_Procedure.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FileDownloadHelper.cs" />
     <Compile Include="Models\FileUploadHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\ResearchProject.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchProjectAccession.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchProjectAccessionTag.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchProjectPatient.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchProjectTag.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchProjectUser.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ResearchUser.cs">
-      <DependentUpon>CCFModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
@@ -459,6 +430,7 @@
     <Content Include="Content\Scripts\Dashboard\UsersTable.js" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
+    <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

@@ -6,7 +6,7 @@ var userTable = {
         var table = $("#researchProjectUsers").DataTable({
             ajax: {
                 // Call GetResearchProjectUsers from the Api Users Controller
-                url: "/Api/Users/" + projectId,
+                url: "/Api/ResearchUsers/" + projectId,
                 dataSrc: "",
                 error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -31,7 +31,7 @@ var userTable = {
                 },
                 {
                     // Fill column 3 with a remove link that contains the users id.
-                    data: "userID",
+                    data: "researchUser.userId",
                     render: function (data) {
                         return "<button class='btn-link js-delete' data-user-id=" + data + ">Remove</button>";
                     }
@@ -49,7 +49,7 @@ var userTable = {
                 if (result) {
                     $.ajax({
                         // Call DeleteResearchProjectUser from the Api Users Controller.
-                        url: "/Api/Users/" + projectId + "/" + userId,
+                        url: "/Api/ResearchUsers/" + projectId + "/" + userId,
                         method: "DELETE",
                         success: function () {
                             // If successful delete row and redraw DataTable.
@@ -62,51 +62,102 @@ var userTable = {
                 }
             });
         });
-    }
-}
 
-var addButton = {
-    Initialize: function () {
-        var button = $("#addUserButton");
+        var vm = {
+            projectId: projectId,
+        };
+
+        var researchUsers = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('username'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/Api/Users?query=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#username').typeahead({
+            minLength: 3,
+            highlight: true
+        }, {
+                name: 'researchUsers',
+                display: 'username',
+                source: researchUsers
+            }).on("typeahead:select", function (e, researchUser) {
+                vm.userId = researchUser.userId;
+            });
+
         var form = $("#addUserForm");
-        button.on("click", function () {
-            // Populate modal popup with the hidden addUserForm from _Users.cshtml.
-            bootbox.dialog({
-                title: "Add User",
-                message: form,
-                buttons: {
-                    cancel: {
-                        label: "Cancel",
-                        className: "btn btn-default"
-                    },
-                    ok: {
-                        label: "Submit",
-                        className: "btn btn-primary",
-                        // Callback function for submitting the form.
-                        callback: function () {
-                            // Pull form values.
-                            var vm = {};
-                            var username = $("input[name='username']").val();
-                            var admin = $("input[name='admin']:checked").val();
-                            if (!username) {
-                                // If program user does not enter a username return an error.
-                                toastr.error("Please input a username.");
-                                return false;
-                            }
-                            vm.username = username;
-                            vm.admin = admin;
-                            $.ajax({
+        form.on("submit", function (e) {
 
-                            });
-                        }
-                    }
+            e.preventDefault();
+            $("#username").typeahead("val", "");
+
+            var admin = $("input[name='admin']:checked").val();
+            vm.admin = admin;
+
+            console.log(vm.projectId);
+            console.log(vm.userId);
+            console.log(vm.admin);
+
+            $.ajax({
+                url: "/Api/ResearchUsers/Add",
+                method: "POST",
+                data: vm,
+                success: function (data) {
+                    console.log(data)
+                    table.draw();
+                },
+                error: function (xhr) {
+                    toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
                 }
             });
         });
     }
 }
 
+
+
+var userForm = {
+    Initialize: function () {
+        
+    }
+}
+
 $(document).ready(function () {
     userTable.Initialize();
-    addButton.Initialize();
+    userForm.Initialize();
+
+/*    button.on("click", function () {
+        // Populate modal popup with the hidden addUserForm from _Users.cshtml.
+        bootbox.dialog({
+            title: "Add User",
+            message: form,
+            buttons: {
+                cancel: {
+                    label: "Cancel",
+                    className: "btn btn-default"
+                },
+                ok: {
+                    label: "Submit",
+                    className: "btn btn-primary",
+                    // Callback function for submitting the form.
+                    callback: function () {
+                        // Pull form values.
+                        var admin = $("input[name='admin']:checked").val();
+                        vm.admin = admin;
+                        if (!username) {
+                            // If program user does not enter a username return an error.
+                            toastr.error("Please input a username.");
+                            return false;
+                        }
+                        $("#username").typeahead("val", "");
+                        console.log(vm.projectId);
+                        console.log(vm.userId);
+                        console.log(vm.admin);
+                    }
+                }
+            }
+        });
+    });*/
 });

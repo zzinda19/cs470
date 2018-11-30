@@ -16,26 +16,19 @@ namespace cs470project.App_Start
             // Domain to Dto
             CreateMap<ResearchProject, ResearchProjectDto>()
                 .ForMember(p => p.InsertDate, opt => opt.MapFrom(src => ((DateTime) src.InsertDate).ToShortDateString()));
+            CreateMap<ResearchProjectAccession, AccessionDto>();
+            CreateMap<ResearchProjectPatient, MRNDto>();
+            CreateMap<ResearchProjectUser, ResearchProjectUserDto>();
+            CreateMap<ResearchUser, ResearchUserDto>();
 
             // Dto to Domain
             CreateMap<ResearchProjectDto, ResearchProject>()
                 .ForMember(p => p.ProjectID, opt => opt.Ignore())
                 .ForMember(p => p.InsertDate, opt => opt.Ignore());
-
-            //Research Accession Mapping
-            // Domain to Dto
-            CreateMap<ResearchProjectAccession, AccessionDto>();
-            CreateMap<ResearchProjectPatient, MRNDto>();
-            // .ForMember;
-
-            // Dto to Domain
             CreateMap<AccessionDto, ResearchProjectAccession>();
-
-            // Domain to Dto
-            CreateMap<ResearchProjectUser, ResearchProjectUserDto>();
-            CreateMap<ResearchUser, ResearchUserDto>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => string.Join(" ", src.FirstName,
-                src.LastName)));
+            CreateMap<ResearchProjectUserDto, ResearchProjectUser>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.ResearchUser.UserId));
+            CreateMap<ResearchUserDto, ResearchUser>();
         }
     }
 }
