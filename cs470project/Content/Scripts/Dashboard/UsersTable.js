@@ -43,7 +43,7 @@ var userTable = {
         table.on("click", ".js-delete", function () {
             var button = $(this);
             // Pull the users id from the remove button's data-user-id attribute.
-            var userId = button.attr("data-user-id")
+            var userId = button.attr("data-user-id");
             // If the program user confirms, remove selected user from the research project.
             bootbox.confirm("Are you sure you want to remove this user from the project?", function (result) {
                 if (result) {
@@ -96,10 +96,6 @@ var userTable = {
             var admin = $("input[name='admin']:checked").val();
             vm.admin = admin;
 
-            console.log(vm.projectId);
-            console.log(vm.userId);
-            console.log(vm.admin);
-
             $.ajax({
                 url: "/Api/ResearchUsers/Add",
                 method: "POST",
@@ -108,7 +104,6 @@ var userTable = {
                     table.ajax.reload();
                 },
                 error: function (xhr) {
-                    console.log(xhr.responseText);
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
                 }
             });
@@ -116,48 +111,7 @@ var userTable = {
     }
 }
 
-
-
-var userForm = {
-    Initialize: function () {
-        
-    }
-}
-
 $(document).ready(function () {
     userTable.Initialize();
     userForm.Initialize();
-
-/*    button.on("click", function () {
-        // Populate modal popup with the hidden addUserForm from _Users.cshtml.
-        bootbox.dialog({
-            title: "Add User",
-            message: form,
-            buttons: {
-                cancel: {
-                    label: "Cancel",
-                    className: "btn btn-default"
-                },
-                ok: {
-                    label: "Submit",
-                    className: "btn btn-primary",
-                    // Callback function for submitting the form.
-                    callback: function () {
-                        // Pull form values.
-                        var admin = $("input[name='admin']:checked").val();
-                        vm.admin = admin;
-                        if (!username) {
-                            // If program user does not enter a username return an error.
-                            toastr.error("Please input a username.");
-                            return false;
-                        }
-                        $("#username").typeahead("val", "");
-                        console.log(vm.projectId);
-                        console.log(vm.userId);
-                        console.log(vm.admin);
-                    }
-                }
-            }
-        });
-    });*/
 });
