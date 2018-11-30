@@ -27,7 +27,7 @@ namespace cs470project.App_Start
                 .ForMember(p => p.InsertDate, opt => opt.Ignore());
             CreateMap<AccessionDto, ResearchProjectAccession>();
             CreateMap<ResearchProjectUserDto, ResearchProjectUser>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.ResearchUser.UserId));
+                .ForMember(dest => dest.UserID, opt => opt.MapFrom(src => src.ResearchUser.UserId));
             CreateMap<ResearchUserDto, ResearchUser>();
         }
     }

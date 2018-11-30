@@ -83,7 +83,9 @@ namespace cs470project.Controllers.Api
                 context.ResearchProjectUsers.Add(researchProjectUser);
                 context.SaveChanges();
 
-                return Ok(researchProjectUser);
+                researchProjectUserDto = Mapper.Map<ResearchProjectUser, ResearchProjectUserDto>(researchProjectUser);
+
+                return Created(new Uri(Request.RequestUri + "/" + researchProjectUser.ProjectID), researchProjectUserDto);
             }
         }
 
@@ -100,7 +102,7 @@ namespace cs470project.Controllers.Api
             using (var context = new CCFDataEntities())
             {
                 var researchProjectUserInDb = context.ResearchProjectUsers
-                    .SingleOrDefault(p => p.ProjectID == projectId && p.UserId == userId);
+                    .SingleOrDefault(p => p.ProjectID == projectId && p.UserID == userId);
 
                 if (researchProjectUserInDb == null)
                 {

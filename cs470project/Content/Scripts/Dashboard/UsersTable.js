@@ -104,11 +104,11 @@ var userTable = {
                 url: "/Api/ResearchUsers/Add",
                 method: "POST",
                 data: vm,
-                success: function (data) {
-                    console.log(data)
-                    table.draw();
+                success: function () {
+                    table.ajax.reload();
                 },
                 error: function (xhr) {
+                    console.log(xhr.responseText);
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
                 }
             });
