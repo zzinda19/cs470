@@ -11,7 +11,5 @@ namespace cs470project.ViewModels
     {
         [Required]
         public int ProjectId { get; set; }
-        [Display(Name = "Which set of key pairs would you like to download?")]
-        public int DownloadType { get; set; }
     }
 }

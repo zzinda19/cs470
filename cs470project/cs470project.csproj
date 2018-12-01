@@ -450,7 +450,6 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
-    <Content Include="Content\Scripts\Dashboard\DownloadKeyPairs.js" />
     <Content Include="Content\Scripts\Dashboard\EditProject.js" />
     <Content Include="Content\Scripts\Dashboard\NewProject.js" />
     <Content Include="Content\Scripts\Dashboard\Index.js" />

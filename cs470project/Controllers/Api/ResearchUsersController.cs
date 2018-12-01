@@ -28,7 +28,7 @@ namespace cs470project.Controllers.Api
 
                 if (researchProjectInDb == null)
                 {
-                    return BadRequest();
+                    return BadRequest("The specified research project is invalid.");
                 }
 
                 var researchProjectUsers = context.ResearchProjectUsers
@@ -54,25 +54,43 @@ namespace cs470project.Controllers.Api
             var projectId = researchProjectUserDto.ProjectId;
             var userId = researchProjectUserDto.UserId;
 
+            // Ensure data is transmitted correctly.
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Improper form submission.");
             }
 
             using (var context = new CCFDataEntities())
             {
-                var researchProjectInDb = context.ResearchProjects.SingleOrDefault(p => p.ProjectID == projectId);
+                // First check if user is already added to project.
+                var researchProjectUserInDb = context.ResearchProjectUsers
+                    .SingleOrDefault(u => u.UserID == userId && u.ProjectID == projectId);
+                // Prevent adding users twice to the same project.
+                if (researchProjectUserInDb != null)
+                {
+                    return BadRequest("This user is already added to the project.");
+                }
+
+                // Next check if the specified research project exists.
+                var researchProjectInDb = context.ResearchProjects
+                    .SingleOrDefault(p => p.ProjectID == projectId);
+                // Prevent adding users to non-existent projects.
                 if (researchProjectInDb == null)
                 {
-                    return BadRequest();
+                    return BadRequest("The specified research project is invalid.");
                 }
 
-                var userInDb = context.ResearchUsers.SingleOrDefault(u => u.UserId == userId);
+                // Next check if the specified user exists in the global user DB.
+                var userInDb = context.ResearchUsers
+                    .SingleOrDefault(u => u.UserId == userId);
+                // Prevent adding non-existent users to a project.
                 if (userInDb == null)
                 {
-                    return BadRequest();
+                    return BadRequest("The specified user is invalid.");
                 }
 
+                // If both the user and project exist and the user is not already added,
+                // create a new record for that user within the specified research project.
                 var researchProjectUser = new ResearchProjectUser
                 {
                     ResearchProject = researchProjectInDb,
@@ -83,8 +101,9 @@ namespace cs470project.Controllers.Api
                 context.ResearchProjectUsers.Add(researchProjectUser);
                 context.SaveChanges();
 
-                researchProjectUserDto = Mapper.Map<ResearchProjectUser, ResearchProjectUserDto>(researchProjectUser);
-
+                // Rebind the updated researchProjectUserDto.
+                Mapper.Map(researchProjectUser, researchProjectUserDto);
+                
                 return Created(new Uri(Request.RequestUri + "/" + researchProjectUser.ProjectID), researchProjectUserDto);
             }
         }
@@ -106,13 +125,15 @@ namespace cs470project.Controllers.Api
 
                 if (researchProjectUserInDb == null)
                 {
-                    return NotFound();
+                    return BadRequest("The specified user is not currently added on this project.");
                 }
+
+                var username = researchProjectUserInDb.ResearchUser.Username;
 
                 context.ResearchProjectUsers.Remove(researchProjectUserInDb);
                 context.SaveChanges();
 
-                return Ok();
+                return Ok(username + " has been removed from this project.");
             }
         }
     }

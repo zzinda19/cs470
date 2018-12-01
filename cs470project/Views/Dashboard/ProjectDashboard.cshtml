@@ -3,7 +3,6 @@
     ViewBag.Title = "Project Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2 id="header"></h2>
 <br />
 <ul class="nav nav-tabs nav-justified">
@@ -28,13 +27,13 @@
         </p>
     </div>
     <div id="uploadMenu" class="tab-pane fade">
-        @Html.Partial("~/Views/Dashboard/ProjectDashboardPartials/_Upload.cshtml", Model)
+        @Html.Partial("~/Views/Dashboard/Partials/_Upload.cshtml")
     </div>
     <div id="downloadMenu" class="tab-pane fade">
-        @Html.Partial("~/Views/Dashboard/ProjectDashboardPartials/_Download.cshtml", Model)
+        @Html.Partial("~/Views/Dashboard/Partials/_Download.cshtml")
     </div>
     <div id="usersMenu" class="tab-pane fade">
-        @Html.Partial("~/Views/Dashboard/ProjectDashboardPartials/_Users.cshtml", Model)
+        @Html.Partial("~/Views/Dashboard/Partials/_Users.cshtml")
     </div>
 </div>
 

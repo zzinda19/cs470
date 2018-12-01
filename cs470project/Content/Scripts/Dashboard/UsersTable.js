@@ -8,7 +8,7 @@ function SetupUserDataTable(projectId) {
             url: "/Api/ResearchUsers/" + projectId,
             dataSrc: "",
             error: function (xhr) {
-                toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
+                toastr.error("An error occured: " + xhr.responseJSON.message);
             }
         },
         columns: [
@@ -53,7 +53,7 @@ function SetupRemoveButtonOnClickHandler(projectId) {
                         userDataTable.row(removeButton.parents("tr")).remove().draw();
                     },
                     error: function (xhr) {
-                        toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
+                        toastr.error("An error occured: " + xhr.responseJSON.message);
                     }
                 });
             }
@@ -109,7 +109,7 @@ function SetupAddUserModalForm(form) {
                             userDataTable.ajax.reload();
                         },
                         error: function (xhr) {
-                            toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
+                            toastr.error("An error occured: " + xhr.responseJSON.message);
                         }
                     });
                 }
@@ -131,7 +131,7 @@ function SetupAddUserModalForm(form) {
             name: 'researchUsers',
             display: 'username',
             source: researchUsers
-            }).on("typeahead:select", function (e, researchUser) {
+        }).on("typeahead:select", function (e, researchUser) {
             // Once a user is selected, add their id to the Dto.
             researchProjectUserDto.userId = researchUser.userId;
         });

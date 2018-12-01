@@ -70,50 +70,29 @@ namespace cs470project.Controllers
                 return View(viewModel);
             }
         }
-   
 
-        // POST: Dashboard/Upload
+        // POST: Dashboard/DownloadKeyPairs
         [HttpPost]
-        public ActionResult Upload(DashboardViewModel viewModel, HttpPostedFileBase File)
-        {
-            var id = viewModel.ProjectId;
-
-            if (Request.Files[0] == null)
-            {
-                return Content("No file found.");
-            }
-
-            return Content(Request.Files[0].FileName);
-
-            //return RedirectToAction("ProjectDashboard/" + id, "Dashboard#uploadMenu");
-        }
-
-        // POST: Dashboard/Download
-        [HttpPost]
-        public ActionResult Download(DashboardViewModel viewModel)
+        public ActionResult DownloadKeyPairs(int projectId, int downloadType)
         {
             var sb = new System.Text.StringBuilder();
             var fileName = "";
 
             using (var context = new CCFDataEntities())
             {
-                var id = viewModel.ProjectId;
-
-                var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
+                var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == projectId);
 
                 if (researchProjectInDb == null)
                 {
                     return HttpNotFound();
                 }
 
-                var downloadType = viewModel.DownloadType;
-
                 switch (downloadType)
                 {
                     case DownloadType.AccessionOnly:
                         fileName = "AccessionKeyPairs.csv";
                         var accessionKeyPairs = context.ResearchProjectAccessions
-                            .Where(p => p.ProjectID == id)
+                            .Where(p => p.ProjectID == projectId)
                             .ToList()
                             .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
 
@@ -134,7 +113,7 @@ namespace cs470project.Controllers
                     case DownloadType.MRNOnly:
                         fileName = "MRNKeyPairs.csv";
                         var MRNKeyPairs = context.ResearchProjectPatients
-                            .Where(p => p.ProjectID == id)
+                            .Where(p => p.ProjectID == projectId)
                             .ToList()
                             .Select(Mapper.Map<ResearchProjectPatient, MRNDto>);
                         if (MRNKeyPairs.Count() != 0)
