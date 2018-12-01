@@ -282,9 +282,7 @@
     <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\AccessionAPIViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\ProjectApiViewModel.cs" />
     <Compile Include="ViewModels\ProjectFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -634,9 +632,9 @@
     <Content Include="Views\Dashboard\ProjectDashboard.cshtml" />
     <Content Include="Views\Dashboard\NewProject.cshtml" />
     <Content Include="Views\Dashboard\EditProject.cshtml" />
-    <Content Include="Views\Dashboard\ProjectDashboardPartials\_Upload.cshtml" />
-    <Content Include="Views\Dashboard\ProjectDashboardPartials\_Download.cshtml" />
-    <Content Include="Views\Dashboard\ProjectDashboardPartials\_Users.cshtml" />
+    <Content Include="Views\Dashboard\Partials\_Upload.cshtml" />
+    <Content Include="Views\Dashboard\Partials\_Download.cshtml" />
+    <Content Include="Views\Dashboard\Partials\_Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
