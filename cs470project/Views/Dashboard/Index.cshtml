@@ -2,13 +2,10 @@
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>Dashboard</h2>
-
 <p>
-    @Html.ActionLink("New Project", "NewProject", "Dashboard", null, new { @class = "btn btn-primary" })
+    <a href="/Dashboard/NewProject" class="btn btn-primary">New Project</a>
 </p>
-
 <table id="researchProjects" class="table table-bordered table-hover">
     <thead>
         <tr>

@@ -91,7 +91,7 @@ function SetupAddUserModalForm(form) {
             ok: {
                 label: "Submit",
                 className: "btn btn-primary",
-                callback: function () {
+                callback: async function () {
                     // Clear username input field when modal is dismissed.
                     $("#username").typeahead("val", "");
 
@@ -99,8 +99,10 @@ function SetupAddUserModalForm(form) {
                     var admin = $("input[name='admin']:checked").val();
                     researchProjectUserDto.admin = admin;
 
+                    var result;
+
                     // Transfer the ResearchProjectUserDto to the Api Controller using Ajax.
-                    $.ajax({
+                    result = await $.ajax({
                         // Calls AddResearchUserToProject in the Api ResearchUsers Controller.
                         url: "/Api/ResearchUsers/Add",
                         method: "POST",
@@ -112,6 +114,8 @@ function SetupAddUserModalForm(form) {
                             toastr.error("An error occured: " + xhr.responseJSON.message);
                         }
                     });
+
+                    return result;
                 }
             }
         }
@@ -131,7 +135,7 @@ function SetupAddUserModalForm(form) {
             name: 'researchUsers',
             display: 'username',
             source: researchUsers
-        }).on("typeahead:select", function (e, researchUser) {
+        }).on("typeahead:selected", function (e, researchUser) {
             // Once a user is selected, add their id to the Dto.
             researchProjectUserDto.userId = researchUser.userId;
         });
