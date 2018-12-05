@@ -21,13 +21,16 @@
             </label>
         </div> &nbsp;
         <button id="submitUpload" class="btn btn-primary" type="submit">Upload</button>
+        <i id="uploadSpinner" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
     </div>
 </form>
 <br />
+<h5 id="uploadedMessage"></h5>
 <table id="researchAccessions" class="table table-bordered table-hover">
     <thead>
-        <tr>
+        <tr class="danger">
             <th>Accession Numbers</th>
+            <th>Reason for Rejection</th>
         </tr>
     </thead>
     <tbody></tbody>
