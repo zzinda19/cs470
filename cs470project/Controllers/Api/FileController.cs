@@ -87,7 +87,7 @@ namespace cs470project.Controllers.Api
         *                  Step 1: is it in the correct format (an integer value)?
         *                  Step 2: is it already included in the project?
         *                  Step 3: does the accession exist? --not implemented 
-        *                  Then is adds the accession to the project.
+        *                  Then it adds the accession to the project.
         *  Parameters:   List<string> accessions: A string list of accession numbers from the uploaded file.
         *                CCFDataEntities context: the database connection
         *                ResearchProject researchProjectInDb: The research project object

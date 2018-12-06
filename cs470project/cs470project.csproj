@@ -209,7 +209,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\Api\ResearchAccessionsController.cs" />
     <Compile Include="Controllers\Api\FileController.cs" />
     <Compile Include="Controllers\Api\ResearchProjectsController.cs" />
     <Compile Include="Controllers\Api\ResearchUsersController.cs" />
@@ -217,10 +216,8 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Dtos\AccessionDto.cs" />
     <Compile Include="Dtos\DownloadRequestDto.cs" />
     <Compile Include="Dtos\KeyPairDto.cs" />
-    <Compile Include="Dtos\MRNDto.cs" />
     <Compile Include="Dtos\RejectedAccessionDto.cs" />
     <Compile Include="Dtos\ResearchProjectDto.cs" />
     <Compile Include="Dtos\ResearchProjectUserDto.cs" />

@@ -86,6 +86,7 @@ function SetupAddUserModalForm(form) {
                 callback: function () {
                     // Clear username input field when modal is dismissed.
                     $("#username").typeahead("val", "");
+                    researchProjectUserDto = {};
                 }
             },
             ok: {
@@ -115,6 +116,7 @@ function SetupAddUserModalForm(form) {
                         }
                     });
 
+                    researchProjectUserDto = {};
                     return result;
                 }
             }
