@@ -12,11 +12,15 @@ namespace cs470project.Controllers.Api
 {
     public class ResearchProjectsController : ApiController
     {
-        // GET /Api/ResearchProjects
-        /*
-         *  Author: Zak Zinda
-         *  
+
+        /**
+         *  Author:         Zak Zinda
+         *  Updated By:     
+         *  Date Updated:   12.6.18
+         *  Description:    Returns a list of existing research projects.
          */
+        // GET /Api/ResearchProjects
+        [HttpGet]
         public IHttpActionResult GetResearchProjects()
         {
             using (var context = new CCFDataEntities())
@@ -29,6 +33,13 @@ namespace cs470project.Controllers.Api
             }
         }
 
+        /**
+         *  Author:         Zak Zinda
+         *  Updated By:     
+         *  Date Updated:   12.6.18
+         *  Description:    Return the project information for a selected research project.
+         *  Parameters:     int id - The id of the project to query.
+         */
         // GET /Api/ResearchProjects/1
         public IHttpActionResult GetResearchProject(int id)
         {
@@ -38,20 +49,28 @@ namespace cs470project.Controllers.Api
 
                 if (researchProject == null)
                 {
-                    return NotFound();
+                    return BadRequest("The selected research project could not be found.");
                 }
 
                 return Ok(Mapper.Map<ResearchProjectDto>(researchProject));
             }
         }
 
+        /**
+         *  Author:         Zak Zinda
+         *  Updated By:     
+         *  Date Updated:   12.6.18
+         *  Description:    Creates a new research project using user-submitted form data.
+         *  Parameters:     ResearchProjectDto researchProjectDto - a data transfer object
+         *                  containing the users form data.
+         */
         // POST: /Api/ResearchProjects/
         [HttpPost]
         public IHttpActionResult CreateResearchProject(ResearchProjectDto researchProjectDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid form data.");
             }
 
             var researchProject = Mapper.Map<ResearchProjectDto, ResearchProject>(researchProjectDto);
@@ -69,13 +88,22 @@ namespace cs470project.Controllers.Api
             return Created(new Uri(Request.RequestUri + "/" + researchProject.ProjectID), researchProjectDto);
         }
 
+        /**
+         *  Author:         Zak Zinda
+         *  Updated By:     
+         *  Date Updated:   12.6.18
+         *  Description:    Updates an existing research project using user-submitted form data.
+         *  Parameters:     int id - the id of the research project the user wishes to update.
+         *                  ResearchProjectDto researchProjectDto - a data transfer object
+         *                  containing the users form data.
+         */
         // PUT: /Api/ResearchProjects/1
         [HttpPut]
         public IHttpActionResult Update(int id, ResearchProjectDto researchProjectDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid form data.");
             }
 
             using (var context = new CCFDataEntities())
@@ -84,7 +112,7 @@ namespace cs470project.Controllers.Api
 
                 if (researchProjectInDb == null)
                 {
-                    return NotFound();
+                    return BadRequest("The selected research project could not be found.");
                 }
 
                 Mapper.Map(researchProjectDto, researchProjectInDb);

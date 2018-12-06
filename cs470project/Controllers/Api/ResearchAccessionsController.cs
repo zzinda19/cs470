@@ -40,23 +40,5 @@ namespace cs470project.Controllers.Api
                 return Ok(Mapper.Map<AccessionDto>(researchAccession));
             }
         }
-
-
-        //we will never be creating accessions so should we do this??
-        //or should this be where a randomized accession is created?
-        // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
-        }
     }
 }

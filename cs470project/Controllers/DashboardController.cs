@@ -25,7 +25,6 @@ namespace cs470project.Controllers
             using (var context = new CCFDataEntities())
             {
                 var researchProject = context.ResearchProjects
-                    .Include(p => p.ResearchProjectAccessions)
                     .SingleOrDefault(p => p.ProjectID == id);
 
                 if (researchProject == null)

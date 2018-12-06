@@ -1,11 +1,19 @@
-﻿var Layout = {
+﻿/**
+*  Author:          Zak Zinda
+*  Updated By:      Landry Snead
+*  Date Updated:    12.4.18
+*  Description:     Initializes the edit project form and processes user submission.
+*/
+var EditProjectForm = {
+
     Initialize: function () {
-        Layout.PopulateDashboard();
-        Layout.SetupValidationAndSubmitHandler();
+        var projectId = $("#projectID").val();
+        EditProjectForm.PopulateForm(projectId);
+        EditProjectForm.SetupValidationAndSubmitHandler(projectId);
     },
 
-    PopulateDashboard: function () {
-        var id = $("#projectID").val();
+    // Populates form with the existing research project form values.
+    PopulateForm: function (id) {
         $.ajax({
             url: "/Api/ResearchProjects/" + id,
             success: function (data) {
@@ -13,32 +21,33 @@
                 $("#description").val(data.projectDescription);
             },
             error: function (xhr) {
-                toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
+                toastr.error("An error occured: " + xhr.responseJSON.message);
             }
         });
     },
 
-    SetupValidationAndSubmitHandler: function () {
+    // Submits form data to update the current research project.
+    SetupValidationAndSubmitHandler: function (id) {
         $("#editProject").validate({
             submitHandler: function () {
-                var id = $("#projectID").val();
-
-                var vm = {};
-                vm.ProjectName = $("#name").val();
-                vm.ProjectDescription = $("#description").val();
+                // Initializes a researchProjectDto and assigns form values accordingly.
+                var researchProjectDto = {
+                    ProjectName: $("#name").val(),
+                    ProjectDescription: $("#description").val()
+                };
 
                 $.ajax({
                     url: "/Api/ResearchProjects/" + id,
                     method: "put",
-                    data: vm,
+                    data: researchProjectDto,
                     success: function (data) {
                         toastr.success("Project successfully updated.");
-                        console.log(data);
+                        // Redirect user back to the project's dashboard.
                         var url = "/Dashboard/ProjectDashboard/" + data.projectID;
                         $(location).attr('href', url);
                     },
                     error: function (xhr) {
-                        toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
+                        toastr.error("An error occured: " + xhr.responseJSON.message);
                     }
                 });
             }
@@ -46,4 +55,4 @@
     }
 };
 
-$(document).ready(Layout.Initialize());
+$(document).ready(EditProjectForm.Initialize());
