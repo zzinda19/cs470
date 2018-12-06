@@ -34,4 +34,6 @@ var NewProjectForm = {
     }
 };
 
-$(document).ready(NewProjectForm.Initialize());
+$(document).ready(function () {
+    NewProjectForm.Initialize()
+});

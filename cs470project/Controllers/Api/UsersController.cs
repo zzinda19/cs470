@@ -13,6 +13,16 @@ namespace cs470project.Controllers.Api
 {
     public class UsersController : ApiController
     {
+        /**
+         *  Author: Zak Zinda
+         *  Date Updated: 11.15.18
+         *  Description: Returns a list of global users in the database. Used by the 
+         *               Bloodhound plug-in in Users.js for auto-filling usernames in
+         *               the add user form.
+         *  Parameters:  string query - Used by Bloodhound, as the user starts typing in
+         *               a username the API queries only global users where the query string
+         *               matches part of the username.
+         */
         // GET: /Api/Users
         public IHttpActionResult GetUsers(string query = null)
         {

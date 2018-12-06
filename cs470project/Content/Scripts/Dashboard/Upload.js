@@ -12,11 +12,11 @@ var UploadForm = {
         UploadForm.SetUploadFileHandler();
     },
 
+    // Displays the selected file name to the user in the file input box.
     SetBrowseFileHandler: function () {
         var fileInput = $("#fileInput");
         $("#fileName").val("");
 
-        // Displays the selected file name to the user in the file input box.
         fileInput.on("change", function () {
             var file = fileInput[0].files[0];
             var fileName = file.name;
@@ -24,10 +24,11 @@ var UploadForm = {
         });
     },
 
+    // Processes user submission of the accession file.
     SetUploadFileHandler: function () {
         var id = $("#projectID").val();
 
-        $("#uploadForm").on("submit", function (e) {
+        $("#uploadForm").submit(function (e) {
             // Prevent the page from refreshing upon user upload.
             e.preventDefault();
 
@@ -60,6 +61,7 @@ var UploadForm = {
                     // Hide upload spinner.
                     uploadSpinner.css("font-size", "0px");
 
+                    // If there are rejected accession numbers display them in datatable.
                     if (data.length > 0) {
                         // Display rejected accession numbers.
                         $("#uploadedMessage").text("Some of your accession numbers were rejected. Reference this table to see why.");

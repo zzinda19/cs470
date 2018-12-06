@@ -55,4 +55,6 @@ var EditProjectForm = {
     }
 };
 
-$(document).ready(EditProjectForm.Initialize());
+$(document).ready(function () {
+    EditProjectForm.Initialize()
+});

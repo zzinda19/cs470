@@ -70,92 +70,104 @@ namespace cs470project.Controllers
             }
         }
 
+        /**
+         *  Author: Zak Zinda
+         *  Date Updated: 11.30.18
+         *  Description: Returns a list of global users in the database. Used by the 
+         *               Bloodhound plug-in in Users.js for auto-filling usernames in
+         *               the add user form.
+         *  Parameters:  int projectId - the id of the project to download accessions/MRNs from.
+         *               int downloadType - the type of files the user wishes to download--see
+         *               DownloadType.cs for the three download types:
+         *                  1 = AccessionsOnly
+         *                  2 = MRNsOnly
+         *                  3 = Both
+         */
         // POST: Dashboard/DownloadKeyPairs
         [HttpPost]
         public ActionResult DownloadKeyPairs(int projectId, int downloadType)
         {
+            // Create new stringbuilder and empty file name.
             var sb = new System.Text.StringBuilder();
-            var fileName = "";
+            var fileName = "KeyPairs.csv";
 
             using (var context = new CCFDataEntities())
             {
                 var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == projectId);
 
+                // First check if the associated project exists.
                 if (researchProjectInDb == null)
                 {
                     return HttpNotFound();
                 }
 
-                switch (downloadType)
-                {
-                    case DownloadType.AccessionOnly:
-                        fileName = "AccessionKeyPairs.csv";
-                        var accessionKeyPairs = context.ResearchProjectAccessions
+                // Return all ResearchProjectAccession objects associated with that project.
+                var keyPairs = context.ResearchProjectAccessions
                             .Where(p => p.ProjectID == projectId)
                             .ToList()
                             .Select(Mapper.Map<ResearchProjectAccession, KeyPairDto>);
 
-                        if (accessionKeyPairs.Count() != 0)
-                        {
+                // Check if any key pairs exist. If not, skip downloadType check.
+                if (keyPairs.Count() == 0)
+                {
+                    sb.Append("This project does not yet have any accession numbers uploaded.\r\n");
+                }
+                else
+                {
+                    // Checks downloadType.
+                    // DownloadType.AccessionOnly = 1
+                    // DownloadType.MRNOnly = 2
+                    // DownloadType.Both = 3
+                    switch (downloadType)
+                    {
+                        case DownloadType.AccessionOnly:
+                            // Set appropriate file name.
+                            fileName = "AccessionKeyPairs.csv";
+
+                            // Add only accession numbers associated with that project to the file.
                             sb.Append("Accession,Randomized Accession\r\n");
-                            foreach (var keyPair in accessionKeyPairs)
+                            foreach (var keyPair in keyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
                                 sb.AppendFormat("=\"{0}\"\r\n", keyPair.AccessionGuid.ToString());
                             }
-                        } 
-                        else
-                        {
-                            sb.Append("This project does not yet have any accession numbers uploaded.\r\n");
-                        }
-                        break;
-                    case DownloadType.MRNOnly:
-                        fileName = "MRNKeyPairs.csv";
-                        var MRNKeyPairs = context.ResearchProjectAccessions
-                            .Where(p => p.ProjectID == projectId)
-                            .ToList()
-                            .Select(Mapper.Map<ResearchProjectAccession, KeyPairDto>);
-                        if (MRNKeyPairs.Count() != 0)
-                        {
+                            break;
+                        case DownloadType.MRNOnly:
+                            // Set appropriate file name.
+                            fileName = "MRNKeyPairs.csv";
+                            
+                            // Add only MRNs associated with that project to the file.
                             sb.Append("MRN,Randomized MRN\r\n");
-                            foreach (var keyPair in MRNKeyPairs)
+                            foreach (var keyPair in keyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.MRN.ToString());
                                 sb.AppendFormat("=\"{0}\"\r\n", keyPair.MRNGuid.ToString());
                             }
-                        }
-                        else
-                        {
-                            sb.Append("This project does not yet have any accession numbers uploaded.\r\n");
-                        }
-                        break;
-                    case DownloadType.Both:
-                        fileName = "AccessionAndMRNKeyPairs.csv";
-                        var DualKeyPairs = context.ResearchProjectAccessions
-                            .Where(p => p.ProjectID == projectId)
-                            .ToList()
-                            .Select(Mapper.Map<ResearchProjectAccession, KeyPairDto>);
-                        if (DualKeyPairs.Count() != 0)
-                        {
+                           
+                            break;
+                        case DownloadType.Both:
+                            // Set appropriate file name.
+                            fileName = "AccessionAndMRNKeyPairs.csv";
+                            
+                            // Add both accessions and MRNs to the file.
                             sb.Append("Accession,Randomized Accession,MRN,Randomized MRN\r\n");
-                            foreach (var keyPair in DualKeyPairs)
+                            foreach (var keyPair in keyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
                                 sb.AppendFormat("=\"{0}\",", keyPair.AccessionGuid.ToString());
                                 sb.AppendFormat("=\"{0}\",", keyPair.MRN.ToString());
                                 sb.AppendFormat("=\"{0}\"\r\n", keyPair.MRNGuid.ToString());
                             }
-                        }
-                        else
-                        {
-                            sb.Append("This project does not yet have any MRNs uploaded.\r\n");
-                        }
-                        break;
-                    default:
-                        break;
+                            
+                            break;
+                        default:
+                            break;
+                    }
                 }
-
+                
+                // Convert stringbuilder into a file string.
                 string file = sb.ToString();
+                // Return file as a csv.
                 return File(new System.Text.UTF8Encoding().GetBytes(file), "text/csv", fileName);
             }
         }

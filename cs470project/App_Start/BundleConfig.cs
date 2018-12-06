@@ -34,7 +34,7 @@ namespace cs470project
                       "~/Content/typeahead.css",
                       "~/Content/site.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/dashboard_index").Include(
+            bundles.Add(new ScriptBundle("~/bundles/Index").Include(
                       "~/Content/Scripts/Dashboard/Index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ProjectDashboard").Include(
