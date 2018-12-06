@@ -42,6 +42,14 @@
           <Property Name="RT_impression" Type="varchar(max)" />
           <Property Name="XAI_StudySKey" Type="int" />
         </EntityType>
+        <EntityType Name="GlobalAccessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Accession" Type="int" Nullable="false" />
+          <Property Name="MRN" Type="varchar" MaxLength="64" Nullable="false" />
+        </EntityType>
         <EntityType Name="ResearchProject">
           <Key>
             <PropertyRef Name="ProjectID" />
@@ -62,7 +70,9 @@
           <Property Name="ProjectID" Type="int" Nullable="false" />
           <Property Name="Accession" Type="int" Nullable="false" />
           <Property Name="AlternateID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="AlternateGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AccessionGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MRN" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="MRNGUID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="ResearchProjectAccessionTags">
           <Key>
@@ -204,6 +214,7 @@
           <EntitySet Name="DIM_Patient" EntityType="Self.DIM_Patient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DIM_Study" EntityType="Self.DIM_Study" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FACT_Procedure" EntityType="Self.FACT_Procedure" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GlobalAccessions" EntityType="Self.GlobalAccessions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchProject" EntityType="Self.ResearchProject" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchProjectAccessions" EntityType="Self.ResearchProjectAccessions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResearchProjectAccessionTags" EntityType="Self.ResearchProjectAccessionTags" Schema="dbo" store:Type="Tables" />
@@ -306,9 +317,11 @@
           <Property Name="ProjectID" Type="Int32" Nullable="false" />
           <Property Name="Accession" Type="Int32" Nullable="false" />
           <Property Name="AlternateID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AlternateGUID" Type="Guid" Nullable="false" />
           <NavigationProperty Name="ResearchProject" Relationship="Self.FK_ResearchProjectAccessions_ProjectID" FromRole="ResearchProjectAccessions" ToRole="ResearchProject" />
           <NavigationProperty Name="ResearchProjectAccessionTags" Relationship="Self.FK_ResearchProjectAccessionTags_ResearchProjectAccession" FromRole="ResearchProjectAccessions" ToRole="ResearchProjectAccessionTags" />
+          <Property Name="AccessionGUID" Type="Guid" Nullable="false" />
+          <Property Name="MRN" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="MRNGUID" Type="Guid" Nullable="false" />
         </EntityType>
         <EntityType Name="ResearchProjectAccessionTag">
           <Key>
@@ -454,6 +467,7 @@
             <End Role="ResearchUser" EntitySet="ResearchUsers" />
             <End Role="ResearchProjectUser" EntitySet="ResearchProjectUsers" />
           </AssociationSet>
+          <EntitySet Name="GlobalAccessions" EntityType="CCFDataModel.GlobalAccession" />
         </EntityContainer>
         <EntityType Name="ResearchProjectUser">
           <Key>
@@ -511,6 +525,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="GlobalAccession">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Accession" Type="Int32" Nullable="false" />
+          <Property Name="MRN" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -572,10 +594,12 @@
           <EntitySetMapping Name="ResearchProjectAccessions">
             <EntityTypeMapping TypeName="CCFDataModel.ResearchProjectAccession">
               <MappingFragment StoreEntitySet="ResearchProjectAccessions">
+                <ScalarProperty Name="MRNGUID" ColumnName="MRNGUID" />
+                <ScalarProperty Name="MRN" ColumnName="MRN" />
+                <ScalarProperty Name="AccessionGUID" ColumnName="AccessionGUID" />
                 <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
                 <ScalarProperty Name="Accession" ColumnName="Accession" />
                 <ScalarProperty Name="AlternateID" ColumnName="AlternateID" />
-                <ScalarProperty Name="AlternateGUID" ColumnName="AlternateGUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -628,6 +652,15 @@
               <MappingFragment StoreEntitySet="ResearchUsers">
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GlobalAccessions">
+            <EntityTypeMapping TypeName="CCFDataModel.GlobalAccession">
+              <MappingFragment StoreEntitySet="GlobalAccessions">
+                <ScalarProperty Name="MRN" ColumnName="MRN" />
+                <ScalarProperty Name="Accession" ColumnName="Accession" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

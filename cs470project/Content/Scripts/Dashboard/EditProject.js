@@ -1,7 +1,7 @@
-﻿var layout = {
+﻿var Layout = {
     Initialize: function () {
-        layout.PopulateDashboard();
-        layout.SetupValidationAndSubmitHandler();
+        Layout.PopulateDashboard();
+        Layout.SetupValidationAndSubmitHandler();
     },
 
     PopulateDashboard: function () {
@@ -46,4 +46,4 @@
     }
 };
 
-$(document).ready(layout.Initialize());
+$(document).ready(Layout.Initialize());

@@ -98,7 +98,7 @@ namespace cs470project.Controllers
 
                         if (accessionKeyPairs.Count() != 0)
                         {
-                            sb.Append("Accession,AccessionGuid\r\n");
+                            sb.Append("Accession,Randomized Accession\r\n");
                             foreach (var keyPair in accessionKeyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
@@ -112,13 +112,13 @@ namespace cs470project.Controllers
                         break;
                     case DownloadType.MRNOnly:
                         fileName = "MRNKeyPairs.csv";
-                        var MRNKeyPairs = context.ResearchProjectPatients
+                        var MRNKeyPairs = context.ResearchProjectAccessions
                             .Where(p => p.ProjectID == projectId)
                             .ToList()
-                            .Select(Mapper.Map<ResearchProjectPatient, KeyPairDto>);
+                            .Select(Mapper.Map<ResearchProjectAccession, KeyPairDto>);
                         if (MRNKeyPairs.Count() != 0)
                         {
-                            sb.Append("MRN,MRNGuid\r\n");
+                            sb.Append("MRN,Randomized MRN\r\n");
                             foreach (var keyPair in MRNKeyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.MRN.ToString());
@@ -127,18 +127,18 @@ namespace cs470project.Controllers
                         }
                         else
                         {
-                            sb.Append("This project does not yet have any MRNs uploaded.\r\n");
+                            sb.Append("This project does not yet have any accession numbers uploaded.\r\n");
                         }
                         break;
                     case DownloadType.Both:
                         fileName = "AccessionAndMRNKeyPairs.csv";
-                        var DualKeyPairs = context.ResearchProjectPatients
+                        var DualKeyPairs = context.ResearchProjectAccessions
                             .Where(p => p.ProjectID == projectId)
                             .ToList()
-                            .Select(Mapper.Map<ResearchProjectPatient, KeyPairDto>);
+                            .Select(Mapper.Map<ResearchProjectAccession, KeyPairDto>);
                         if (DualKeyPairs.Count() != 0)
                         {
-                            sb.Append("Accession,AccessionGuidMRN,MRNGuid\r\n");
+                            sb.Append("Accession,Randomized Accession,MRN,Randomized MRN\r\n");
                             foreach (var keyPair in DualKeyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());

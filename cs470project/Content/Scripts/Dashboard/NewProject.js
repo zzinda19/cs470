@@ -1,4 +1,4 @@
-﻿var layout = {
+﻿var Layout = {
     Initialize: function () {
         $("#newProject").validate({
             submitHandler: function () {
@@ -24,4 +24,4 @@
     }
 };
 
-$(document).ready(layout.Initialize());
+$(document).ready(Layout.Initialize());

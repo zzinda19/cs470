@@ -219,7 +219,9 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Dtos\AccessionDto.cs" />
     <Compile Include="Dtos\DownloadRequestDto.cs" />
+    <Compile Include="Dtos\KeyPairDto.cs" />
     <Compile Include="Dtos\MRNDto.cs" />
+    <Compile Include="Dtos\RejectedAccessionDto.cs" />
     <Compile Include="Dtos\ResearchProjectDto.cs" />
     <Compile Include="Dtos\ResearchProjectUserDto.cs" />
     <Compile Include="Dtos\ResearchUserDto.cs" />
@@ -254,6 +256,9 @@
     </Compile>
     <Compile Include="Models\FileDownloadHelper.cs" />
     <Compile Include="Models\FileUploadHelper.cs" />
+    <Compile Include="Models\GlobalAccession.cs">
+      <DependentUpon>CCFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ResearchProject.cs">

@@ -23,6 +23,7 @@
         <AssociationConnector Association="CCFDataModel.FK_ProjectAdmin" />
         <AssociationConnector Association="CCFDataModel.FK_ProjectID" />
         <AssociationConnector Association="CCFDataModel.FK_UserID" />
+        <EntityTypeShape EntityType="CCFDataModel.GlobalAccession" Width="1.5" PointX="10.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

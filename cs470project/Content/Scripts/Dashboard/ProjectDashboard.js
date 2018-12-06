@@ -4,9 +4,15 @@
 *  Date Updated:    10.26.18
 *  Description:     This populates the project dashboard with the appropriate project information
 */
-var layout = {
+var Layout = {
+    RejectedAccessionsDataTable: {},
+    UploadSpinner: {},
+
     Initialize: function () {
-        layout.PopulateDashboard();
+        this.RejectedAccessionsDataTable = $("#rejectedAccessions");
+        this.UploadSpinner = $("#uploadSpinner");
+
+        Layout.PopulateDashboard();
     },
 
     PopulateDashboard: function () {
@@ -33,11 +39,11 @@ var layout = {
 *  Date Updated:    12.4.18
 *  Description:     This handles the client side end of uploading
 */
-var uploadForm = {
+var UploadForm = {
 
     Initialize: function () {
-        uploadForm.SetBrowseFileHandler();
-        uploadForm.SetUploadFileHandler();
+        UploadForm.SetBrowseFileHandler();
+        UploadForm.SetUploadFileHandler();
     },
 
     SetBrowseFileHandler: function () {
@@ -46,10 +52,8 @@ var uploadForm = {
 
         //display selected file name
         fileInput.on("change", function () {
-            console.log(fileInput);
             var file = fileInput[0].files[0];
             var fileName = file.name;
-            console.log(fileName);
             $("#fileName").val(fileName);
         });
     },
@@ -63,7 +67,7 @@ var uploadForm = {
             e.preventDefault();
 
             //display upload spinner to indicate uploading is in progress
-            document.getElementById("uploadSpinner").style.fontSize = "24px";
+            Layout.UploadSpinner.css("font-size", "24px");
 
             // Obtain the inputted file.
             var fileInput = $("#fileInput");
@@ -88,30 +92,34 @@ var uploadForm = {
                     toastr.success("Accession numbers successfully uploaded.");
 
                     //remove upload spinner
-                    document.getElementById("uploadSpinner").style.fontSize = "0px";
+                    Layout.UploadSpinner.css("font-size", "0px");
 
                     if (data.length > 0) {
                         //display rejected accession numbers
-                        document.getElementById("uploadedMessage").innerHTML = "Some of your accession numbers may have been rejected. Reference this table to see why";
-                        document.getElementById("researchAccessions").style.display = "block";
+                        $("#uploadedMessage").text("Some of your accession numbers may have been rejected. Reference this table to see why.");
+                        Layout.RejectedAccessionsDataTable.css("display", "block");
 
                         //clear data if a table already exists
-                        if ($.fn.DataTable.isDataTable("#researchAccessions")) {
-                            $('#researchAccessions').DataTable().clear().destroy();
+                        if ($.fn.DataTable.isDataTable("#rejectedAccessions")) {
+                            Layout.RejectedAccessionsDataTable.DataTable().clear().destroy();
                         }
 
-                        $("#researchAccessions").DataTable({
+                        Layout.RejectedAccessionsDataTable.DataTable({
                             data: data,
                             columns: [
                                 { data: "accession" },
                                 { data: "reason" }
                             ],
+                            "autoWidth": true,
                             "fnCreatedRow": function (nRow) {
                                 $(nRow).attr('class', 'danger');
                             }
                         });
-                    }
-                    console.log(data);
+
+                        Layout.RejectedAccessionsDataTable.columns.adjust().draw();
+
+                        console.log(data);
+                    }  
                 },
                 error: function (xhr) {
                     toastr.error("An error occured: " + xhr.status + " " + xhr.statusText);
@@ -130,12 +138,9 @@ var uploadForm = {
 *  Author:          Zak Zinda
 *  Updated By:      
 *  Date Updated:    10.26.18
-*  Description:     On page load hide elements and intialize the layout and uploadForm functions
+*  Description:     On page load initializes the layout and upload form button.
 */
 $(document).ready(function () {
-    //when the page is loaded, do not display the rejected accessions table or upload spinner
-    document.getElementById("researchAccessions").style.display = "none";
-    document.getElementById("uploadSpinner").style.fontSize = "0px";
-    layout.Initialize();
-    uploadForm.Initialize();
+    Layout.Initialize();
+    UploadForm.Initialize();
 });

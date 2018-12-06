@@ -53,7 +53,7 @@ namespace cs470project.Controllers.Api
                 FileUploadHelper helper = new FileUploadHelper();
                 List<string> accessionNumbers = helper.ParseFileToList(fileName, hasHeader);
 
-                DataTable rejectedAccessions = new DataTable();
+                List<RejectedAccessionDto> rejectedAccessions = new List<RejectedAccessionDto>();
 
                 using (var context = new CCFDataEntities())
                 {
@@ -64,7 +64,7 @@ namespace cs470project.Controllers.Api
                         return BadRequest("The selected research project does not exist.");
                     }
 
-                    rejectedAccessions = ValidateUploadedAccessions(accessionNumbers, context, id, researchProjectInDb);
+                    rejectedAccessions = ValidateUploadedAccessions(accessionNumbers, context, researchProjectInDb);
                 }
 
                 return Ok(rejectedAccessions);
@@ -79,44 +79,9 @@ namespace cs470project.Controllers.Api
             }
         }
 
-        /**
-         *  Author:       Landry Snead
-         *  Date Updated: 11.10.18
-         *  Description:  This checks to see if the accession is already in the project
-         *  Parameters:   string accession: the accession number to check (from the uploaded list)
-         *                CCFDataEntities context: the database connection
-         *                int id: the id of the project to check in
-         */
-        public Boolean AccessionIsDuplicate(string accession, CCFDataEntities context, int id)
-        {
-            int accessionAsInt = Convert.ToInt32(accession);
-            Boolean accessionExists = context.ResearchProjectAccessions
-                                       .Where(a => a.Accession == accessionAsInt && a.ProjectID == id)
-                                       .Any();
-            return accessionExists;
-        }
-
-        /**
-         *  Author:       Landry Snead
-         *  Date Updated: 11.26.18
-         *  Description:  This checks to see if the accession exists. To be implemented...
-         *  Parameters:   string accession: the accession number to check (from the uploaded list)
-         *                CCFDataEntities context: the database connection
-         *                int id: the id of the project to check in
-         */
-        /*
-       public Boolean AccessionExists(string accession, CCFDataEntities context, int id)
-       {
-           int accessionAsInt = Convert.ToInt32(accession);
-           Boolean accessionExists = context.ResearchProjectAccessions
-                                      .Where(a => a.Accession == accessionAsInt && a.ProjectID == id)
-                                      .Any();
-           return accessionExists;
-       }
-       /*
-
        /**
         *  Author:       Landry Snead
+        *  Updated By:   Zak Zinda
         *  Date Updated: 11.10.18
         *  Description:  This checks each uploaded accession number to see if it is valid. 
         *                  Step 1: is it in the correct format (an integer value)?
@@ -125,55 +90,77 @@ namespace cs470project.Controllers.Api
         *                  Then is adds the accession to the project.
         *  Parameters:   List<string> accessions: A string list of accession numbers from the uploaded file.
         *                CCFDataEntities context: the database connection
-        *                int id: the id of project to add to
         *                ResearchProject researchProjectInDb: The research project object
         */
-        [HttpGet]
-        public DataTable ValidateUploadedAccessions(List<string> accessions, CCFDataEntities context, int id, ResearchProject researchProjectInDb)
+        [NonAction]
+        public List<RejectedAccessionDto> ValidateUploadedAccessions(List<string> accessions, CCFDataEntities context, ResearchProject researchProjectInDb)
         {
-            DataTable rejected = new DataTable();
-            rejected.Columns.Add("accession", typeof(string));
-            rejected.Columns.Add("reason", typeof(string));
+            List<RejectedAccessionDto> rejectedAccessions = new List<RejectedAccessionDto>();
+
+            var projectId = researchProjectInDb.ProjectID;
 
             foreach (var accessionNumber in accessions)
             {
-                //check if in the correct format
+                RejectedAccessionDto rejectedAccession;
+                // Ensure the accession number is an integer.
                 if (!accessionNumber.All(char.IsDigit))
                 {
-                    //accession is not an int, add to rejected
-                    rejected.Rows.Add(accessionNumber, "Accession must be an integer");
+                    rejectedAccession = new RejectedAccessionDto
+                    {
+                        Accession = accessionNumber,
+                        Reason = "Accession must be an integer."
+                    };
+                    rejectedAccessions.Add(rejectedAccession);
                     continue;
                 }
 
-                //check if duplicate
-                else if (AccessionIsDuplicate(accessionNumber, context, id))
+                var convertedAccessionNumber = Convert.ToInt32(accessionNumber.Trim());
+
+                var researchAccessionInDb = context.ResearchProjectAccessions
+                    .SingleOrDefault(a => a.ProjectID == projectId && a.Accession == convertedAccessionNumber);
+
+                // Ensure the accession number has not already been added.
+                if (researchAccessionInDb != null)
                 {
-                    //accession is already a part of the project, add to rejected
-                    rejected.Rows.Add(accessionNumber, "Accession is already included in the project");
+                    rejectedAccession = new RejectedAccessionDto
+                    {
+                        Accession = accessionNumber,
+                        Reason = "Accession has already been added to the project."
+                    };
+                    rejectedAccessions.Add(rejectedAccession);
                     continue;
                 }
 
-                //check if in global database --to be implemented
-                //else if (accessionExists(accessionNumber, context,id))
-                //{
-                //    //accession does not exist in the global database, add to rejected
-                //    rejected.Rows.Add(accessionNumber, "Accession does not exist");
-                //    continue;
-                //}
+                var globalAccessionInDb = context.GlobalAccessions
+                    .SingleOrDefault(a => a.Accession == convertedAccessionNumber);
+
+                // Ensure the accession number exists globally.
+                if (globalAccessionInDb == null)
+                {
+                    rejectedAccession = new RejectedAccessionDto
+                    {
+                        Accession = accessionNumber,
+                        Reason = "Accession does not exist in the global database."
+                    };
+                    rejectedAccessions.Add(rejectedAccession);
+                    continue;
+                }
 
                 //accession passed validation, create an accession object to add to the database
                 var accession = new ResearchProjectAccession()
                 {
                     ResearchProject = researchProjectInDb,
-                    Accession = Convert.ToInt32(accessionNumber.Trim()),
-                    AccessionGUID = Guid.NewGuid() //deidentified accession number
+                    Accession = globalAccessionInDb.Accession,
+                    AccessionGUID = Guid.NewGuid(), //deidentified accession number
+                    MRN = globalAccessionInDb.MRN,
+                    MRNGUID = Guid.NewGuid()
                 };
 
                 context.ResearchProjectAccessions.Add(accession);
                 context.SaveChanges();
             }
 
-            return rejected;
+            return rejectedAccessions;
         }
     }
 }   

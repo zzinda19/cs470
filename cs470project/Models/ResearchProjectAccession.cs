@@ -22,6 +22,7 @@ namespace cs470project.Models
     
         public int ProjectID { get; set; }
         public int Accession { get; set; }
+        public long AlternateID { get; set; }
         public System.Guid AccessionGUID { get; set; }
         public string MRN { get; set; }
         public System.Guid MRNGUID { get; set; }

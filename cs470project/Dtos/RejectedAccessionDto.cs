@@ -6,11 +6,13 @@ using System.Web;
 
 namespace cs470project.Dtos
 {
-    public class AccessionDto
+    public class RejectedAccessionDto
     {
         [Required]
-        public int Accession { get; set; }
+        [StringLength(255)]
+        public string Accession { get; set; }
         [Required]
-        public Guid AccessionGuid { get; set; }
+        [StringLength(255)]
+        public string Reason { get; set; }
     }
 }
