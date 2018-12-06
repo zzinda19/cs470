@@ -166,7 +166,7 @@ namespace cs470project.Controllers.Api
                 {
                     ResearchProject = researchProjectInDb,
                     Accession = Convert.ToInt32(accessionNumber.Trim()),
-                    AlternateGUID = Guid.NewGuid() //deidentified accession number
+                    AccessionGUID = Guid.NewGuid() //deidentified accession number
                 };
 
                 context.ResearchProjectAccessions.Add(accession);
@@ -174,76 +174,6 @@ namespace cs470project.Controllers.Api
             }
 
             return rejected;
-        }
-
-        // GET: /Api/File/1
-        [Route("Api/File/Download/")]
-        [HttpPost]
-        public IHttpActionResult Download(DownloadRequestDto downloadRequest)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Download request is incomplete.");
-            }
-
-            var sb = new StringBuilder();
-            var fileName = "";
-
-            using (var context = new CCFDataEntities())
-            {
-                var id = downloadRequest.ProjectId;
-
-                var researchProjectInDb = context.ResearchProjects.Single(p => p.ProjectID == id);
-
-                if (researchProjectInDb == null)
-                {
-                    return BadRequest("The selected research project does not exist.");
-                }
-
-                var downloadType = downloadRequest.DownloadType;
-
-                switch (downloadType)
-                {
-                    case DownloadType.AccessionOnly:
-                        fileName = "AccessionKeyPairs.csv";
-                        var accessionKeyPairs = context.ResearchProjectAccessions
-                            .Where(p => p.ProjectID == id)
-                            .ToList()
-                            .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
-
-                        sb.Append("Accession,AlternateGuid\r\n");
-                        foreach (var keyPair in accessionKeyPairs)
-                        {
-                            sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
-                            sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
-                        }
-                        break;
-                    case DownloadType.MRNOnly:
-                        fileName = "MRNKeyPairs.csv";
-
-                        break;
-                    case DownloadType.Both:
-                        fileName = "AccessionAndMRNKeyPairs.csv";
-
-                        break;
-                    default:
-                        return BadRequest("Improper key-pair type submitted.");
-                }
-
-                HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(sb.ToString())
-                };
-                result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
-                result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = fileName
-                };
-
-                var response = ResponseMessage(result);
-
-                return response;
-            }
         }
     }
 }   

@@ -94,15 +94,15 @@ namespace cs470project.Controllers
                         var accessionKeyPairs = context.ResearchProjectAccessions
                             .Where(p => p.ProjectID == projectId)
                             .ToList()
-                            .Select(Mapper.Map<ResearchProjectAccession, AccessionDto>);
+                            .Select(Mapper.Map<ResearchProjectAccession, KeyPairDto>);
 
                         if (accessionKeyPairs.Count() != 0)
                         {
-                            sb.Append("Accession,AlternateGuid\r\n");
+                            sb.Append("Accession,AccessionGuid\r\n");
                             foreach (var keyPair in accessionKeyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
-                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.AccessionGuid.ToString());
                             }
                         } 
                         else
@@ -115,14 +115,14 @@ namespace cs470project.Controllers
                         var MRNKeyPairs = context.ResearchProjectPatients
                             .Where(p => p.ProjectID == projectId)
                             .ToList()
-                            .Select(Mapper.Map<ResearchProjectPatient, MRNDto>);
+                            .Select(Mapper.Map<ResearchProjectPatient, KeyPairDto>);
                         if (MRNKeyPairs.Count() != 0)
                         {
-                            sb.Append("MRN,AlternateGuid\r\n");
+                            sb.Append("MRN,MRNGuid\r\n");
                             foreach (var keyPair in MRNKeyPairs)
                             {
                                 sb.AppendFormat("=\"{0}\",", keyPair.MRN.ToString());
-                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.AlternateGuid.ToString());
+                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.MRNGuid.ToString());
                             }
                         }
                         else
@@ -132,7 +132,25 @@ namespace cs470project.Controllers
                         break;
                     case DownloadType.Both:
                         fileName = "AccessionAndMRNKeyPairs.csv";
-
+                        var DualKeyPairs = context.ResearchProjectPatients
+                            .Where(p => p.ProjectID == projectId)
+                            .ToList()
+                            .Select(Mapper.Map<ResearchProjectPatient, KeyPairDto>);
+                        if (DualKeyPairs.Count() != 0)
+                        {
+                            sb.Append("Accession,AccessionGuidMRN,MRNGuid\r\n");
+                            foreach (var keyPair in DualKeyPairs)
+                            {
+                                sb.AppendFormat("=\"{0}\",", keyPair.Accession.ToString());
+                                sb.AppendFormat("=\"{0}\",", keyPair.AccessionGuid.ToString());
+                                sb.AppendFormat("=\"{0}\",", keyPair.MRN.ToString());
+                                sb.AppendFormat("=\"{0}\"\r\n", keyPair.MRNGuid.ToString());
+                            }
+                        }
+                        else
+                        {
+                            sb.Append("This project does not yet have any MRNs uploaded.\r\n");
+                        }
                         break;
                     default:
                         break;

@@ -11,7 +11,7 @@ namespace cs470project.Dtos
         [Required]
         public int Accession { get; set; }
         [Required]
-        public Guid AlternateGuid { get; set; }
+        public Guid AccessionGuid { get; set; }
 
     }
 }

@@ -18,6 +18,7 @@ namespace cs470project.App_Start
                 .ForMember(p => p.InsertDate, opt => opt.MapFrom(src => ((DateTime) src.InsertDate).ToShortDateString()));
             CreateMap<ResearchProjectAccession, AccessionDto>();
             CreateMap<ResearchProjectPatient, MRNDto>();
+            CreateMap<ResearchProjectAccession, KeyPairDto>();
             CreateMap<ResearchProjectUser, ResearchProjectUserDto>();
             CreateMap<ResearchUser, ResearchUserDto>();
 

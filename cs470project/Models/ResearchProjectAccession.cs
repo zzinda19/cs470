@@ -22,8 +22,9 @@ namespace cs470project.Models
     
         public int ProjectID { get; set; }
         public int Accession { get; set; }
-        public long AlternateID { get; set; }
-        public System.Guid AlternateGUID { get; set; }
+        public System.Guid AccessionGUID { get; set; }
+        public string MRN { get; set; }
+        public System.Guid MRNGUID { get; set; }
     
         public virtual ResearchProject ResearchProject { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

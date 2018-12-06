@@ -6,12 +6,12 @@ using System.Web;
 
 namespace cs470project.Dtos
 {
-    public class MRNDto
+    public class KeyPairDto
     {
-        [Required]
+        public int Accession { get; set; }
+        public Guid AccessionGuid { get; set; }
         [StringLength(64)]
         public string MRN { get; set; }
-        [Required]
         public Guid MRNGuid { get; set; }
     }
 }
