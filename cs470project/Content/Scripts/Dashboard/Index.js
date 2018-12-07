@@ -5,7 +5,7 @@
 *  Description:     Initializes the index data table with all current research projects.
 */
 var Index = {
-    SetupIndexDataTable: function () {
+    Initialize: function () {
         $("#researchProjects").DataTable({
             ajax: {
                 url: "/Api/ResearchProjects",
@@ -31,5 +31,5 @@ var Index = {
 }
 
 $(document).ready(function () {
-    Index.SetupIndexDataTable();
+    Index.Initialize();
 });

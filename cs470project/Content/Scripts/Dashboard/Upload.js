@@ -3,7 +3,7 @@
 *  Updated By:      Landry Snead
 *  Date Updated:    12.6.18
 *  Description:     Initializes the upload form for accessions and handles user uploads as well as
- *                  creates the datatable of rejected accession numbers.
+*                   creates the datatable of rejected accession numbers.
 */
 var UploadForm = {
 
