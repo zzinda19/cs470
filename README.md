@@ -1,6 +1,6 @@
 # Senior Software Capstone Project for John Carroll University: Anonymization Tool
 ## Project Overview
-The intent of the anonymization program is to give users a tool to upload identifiable accession numbers and get anonymized accession numbers back to be used in research. The program will allow users to upload one or more files of accession numbers. The users will also be able to download tables of the original accessions, anonymized accessions, and their associated MRNs (medical record numbers). Users will also be able to create research projects and assign accession numbers to that project. Users who initially create projects can also determine who has access to those projects.
+The intent of the anonymization program is to give users a tool to upload identifiable accession numbers and get anonymized accession numbers in return, to be used for third-party research. The program will allow users to upload a file (.csv, .xls, .xlsx) of accession numbers, which are then validated and added to that project's database. The users will also be able to download tables of the original accessions, anonymized accessions, and their associated MRNs (medical record numbers). Users who initially create a research project can also give/rescind access to other users for that project.
 ## Project Structure
 1. /Content/Scripts/Dashboard: Relevant JS files. 
 2. /Controllers: Standard MVC Controllers.
