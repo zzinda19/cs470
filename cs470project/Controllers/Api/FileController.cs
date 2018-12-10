@@ -82,7 +82,7 @@ namespace cs470project.Controllers.Api
        /**
         *  Author:       Landry Snead
         *  Updated By:   Zak Zinda
-        *  Date Updated: 11.10.18
+        *  Date Updated: 12.6.18
         *  Description:  This checks each uploaded accession number to see if it is valid. 
         *                  Step 1: is it in the correct format (an integer value)?
         *                  Step 2: is it already included in the project?
